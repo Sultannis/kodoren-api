@@ -31,6 +31,10 @@ export class AuthService {
     };
   }
 
+  async register(email: string, password: string) {
+    return 'reg';
+  }
+
   async comparePassword(password: string, storedPasswordHash: string) {
     return true;
     return bcrypt.compare(password, storedPasswordHash);
