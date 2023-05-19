@@ -1,16 +1,41 @@
 import { Entity, Column, PrimaryGeneratedColumn } from 'typeorm';
 
-@Entity()
+@Entity('users')
 export class User {
   @PrimaryGeneratedColumn()
   id: number;
 
-  @Column()
-  firstName: string;
+  @Column({
+    name: 'email',
+    type: 'varchar',
+    unique: true,
+  })
+  email: string;
 
-  @Column()
-  lastName: string;
+  @Column({
+    name: 'password',
+    type: 'varchar',
+  })
+  password: string;
 
-  @Column({ default: true })
-  isActive: boolean;
+  @Column({
+    name: 'created_at',
+    type: 'timestamp',
+    default: 'now()',
+  })
+  createdAt: string;
+
+  @Column({
+    name: 'updated_at',
+    type: 'timestamp',
+    default: 'now()',
+  })
+  updatedAt: string;
+
+  @Column({
+    name: 'deleted_at',
+    type: 'timestamp',
+    nullable: true,
+  })
+  deletedAt: string;
 }

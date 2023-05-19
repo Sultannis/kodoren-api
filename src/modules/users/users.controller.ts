@@ -6,9 +6,9 @@ export class UsersController {
   constructor(private readonly usersService: UsersService) {}
 
   @Get()
-  findAll() {
+  async findAll() {
     return {
-      users: this.usersService.findAll(),
+      users: await this.usersService.findAll(),
     };
   }
 }
