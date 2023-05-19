@@ -1,9 +1,19 @@
 import { Module } from '@nestjs/common';
 import { AppService } from './app.service';
-import { DatabaseModule } from './database/database.module';
+import { TypeOrmModule } from '@nestjs/typeorm';
+import { UsersModule } from './modules/users/users.module';
+import { datasource } from './database/data-source';
+
+import { User } from './modules/users/user.entity';
 
 @Module({
-  imports: [DatabaseModule],
+  imports: [
+    UsersModule,
+    TypeOrmModule.forRoot({
+      ...datasource,
+      entities: [User],
+    }),
+  ],
   providers: [AppService],
 })
 export class AppModule {}
