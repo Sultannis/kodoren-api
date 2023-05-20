@@ -1,4 +1,5 @@
 import {
+  ConflictException,
   Injectable,
   NotFoundException,
   UnauthorizedException,
@@ -27,16 +28,30 @@ export class AuthService {
     }
 
     return {
-      authToken: await this.jwtService.signAsync({ id: 1 }),
+      authToken: await this.jwtService.signAsync({ id: user.id }),
     };
   }
 
   async register(email: string, password: string) {
-    return 'reg';
+    let user = await this.usersService.findByEmail(email);
+    if (user) {
+      throw new ConflictException('User already exists');
+    }
+
+    const passwordHash = await this.hashPassword(password);
+
+    user = await this.usersService.register({ email, password: passwordHash });
+
+    return {
+      authToken: await this.jwtService.signAsync({ id: user.id }),
+    };
+  }
+
+  async hashPassword(password: string): Promise<string> {
+    return bcrypt.hash(password, 10);
   }
 
   async comparePassword(password: string, storedPasswordHash: string) {
-    return true;
     return bcrypt.compare(password, storedPasswordHash);
   }
 }
