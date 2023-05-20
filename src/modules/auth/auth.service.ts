@@ -29,6 +29,7 @@ export class AuthService {
 
     return {
       authToken: await this.jwtService.signAsync({ id: user.id }),
+      user,
     };
   }
 
@@ -44,6 +45,7 @@ export class AuthService {
 
     return {
       authToken: await this.jwtService.signAsync({ id: user.id }),
+      user,
     };
   }
 

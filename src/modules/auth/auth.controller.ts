@@ -9,12 +9,36 @@ export class AuthController {
 
   @HttpCode(HttpStatus.OK)
   @Post('login')
-  logIn(@Body() logInDto: LogInDto) {
-    return this.authService.logIn(logInDto.email, logInDto.password);
+  async logIn(@Body() logInDto: LogInDto) {
+    const { authToken, user } = await this.authService.logIn(
+      logInDto.email,
+      logInDto.password,
+    );
+
+    const { password, ...userWithoutPassword } = user;
+
+    return {
+      authToken,
+      user: {
+        ...userWithoutPassword,
+      },
+    };
   }
 
   @Post('register')
-  register(@Body() registerDto: RegisterDto) {
-    return this.authService.register(registerDto.email, registerDto.password);
+  async register(@Body() registerDto: RegisterDto) {
+    const { authToken, user } = await this.authService.register(
+      registerDto.email,
+      registerDto.password,
+    );
+
+    const { password, ...userWithoutPassword } = user;
+
+    return {
+      authToken,
+      user: {
+        ...userWithoutPassword,
+      },
+    };
   }
 }
