@@ -1,1 +1,5 @@
-export class CreateCourseDto {}
+export class CreateCourseDto {
+  title: string;
+  description: string;
+  totalLessons: number;
+}

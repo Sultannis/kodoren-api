@@ -6,13 +6,14 @@ import { datasource } from './database/data-source';
 import { User } from './modules/users/entities/user.entity';
 import { AuthModule } from './modules/auth/auth.module';
 import { CoursesModule } from './modules/courses/courses.module';
+import { Course } from './modules/courses/entities/course.entity';
 
 @Module({
   imports: [
     UsersModule,
     TypeOrmModule.forRoot({
       ...datasource,
-      entities: [User],
+      entities: [User, Course],
     }),
     AuthModule,
     CoursesModule,

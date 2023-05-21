@@ -14,7 +14,7 @@ export class CreateCoursesTable1684659486644 implements MigrationInterface {
             generationStrategy: 'increment',
           },
           {
-            name: 'name',
+            name: 'title',
             type: 'varchar',
             isNullable: false,
           },
@@ -37,6 +37,11 @@ export class CreateCoursesTable1684659486644 implements MigrationInterface {
             name: 'updated_at',
             type: 'timestamp',
             default: 'now()',
+          },
+          {
+            name: 'deleted_at',
+            type: 'timestamp',
+            isNullable: true,
           },
         ],
       }),
