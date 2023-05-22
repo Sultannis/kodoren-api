@@ -15,7 +15,7 @@ import { Course } from './modules/courses/entities/course.entity';
       ...datasource,
       entities: [User, Course],
       ssl:
-        process.env.APP_ENV === process.env.Local
+        process.env.APP_ENV === 'local'
           ? false
           : {
               ca: process.env.CACERT,
