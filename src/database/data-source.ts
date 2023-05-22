@@ -22,9 +22,9 @@ export const AppDataSource = new DataSource({
   migrations: ['src/database/migrations/*{.ts,.js}'],
   entities: ['src/modules/**/**.entity{.ts,.js}'],
   ssl:
-    process.env.APP_ENV === 'local'
+    appConfig.appEnv === 'local'
       ? false
       : {
-          ca: process.env.CACERT,
+          ca: appConfig.caCert,
         },
 });
