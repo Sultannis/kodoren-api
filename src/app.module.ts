@@ -7,10 +7,12 @@ import { User } from './modules/users/entities/user.entity';
 import { AuthModule } from './modules/auth/auth.module';
 import { CoursesModule } from './modules/courses/courses.module';
 import { Course } from './modules/courses/entities/course.entity';
+import { HealthModule } from './modules/health/health.module';
 
 @Module({
   imports: [
     UsersModule,
+    HealthModule,
     TypeOrmModule.forRoot({
       ...datasource,
       entities: [User, Course],
