@@ -41,7 +41,7 @@ export class UsersService {
     return this.usersRepository.findOneBy({ id: userId });
   }
 
-  async remove(userId: number): Promise<User> {
+  async softDelete(userId: number): Promise<User> {
     const user = await this.usersRepository.findOneBy({ id: userId });
     if (!user) {
       throw new NotFoundException('User not found');
