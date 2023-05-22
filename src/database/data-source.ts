@@ -1,4 +1,4 @@
-import { User } from 'src/modules/users/entities/user.entity';
+import { appConfig } from 'src/config/app.config';
 import { DataSource } from 'typeorm';
 
 export const datasource: {
@@ -10,11 +10,11 @@ export const datasource: {
   database: string;
 } = {
   type: 'postgres',
-  host: process.env.POSTGRES_HOST || 'localhost',
-  port: +process.env.POSTGRES_PORT || 5432,
-  username: 'postgres',
-  password: '',
-  database: 'kodoren',
+  host: appConfig.dbHost,
+  port: appConfig.dbPort,
+  username: appConfig.dbUser,
+  password: appConfig.dbPassword,
+  database: appConfig.dbName,
 };
 
 export const AppDataSource = new DataSource({

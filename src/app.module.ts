@@ -14,6 +14,12 @@ import { Course } from './modules/courses/entities/course.entity';
     TypeOrmModule.forRoot({
       ...datasource,
       entities: [User, Course],
+      ssl:
+        process.env.APP_ENV === process.env.Local
+          ? false
+          : {
+              ca: process.env.CA_CERT,
+            },
     }),
     AuthModule,
     CoursesModule,
