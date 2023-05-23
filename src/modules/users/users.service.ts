@@ -18,8 +18,14 @@ export class UsersService {
     return this.usersRepository.save(user);
   }
 
-  findAll(): Promise<User[]> {
-    return this.usersRepository.find();
+  findAll(
+    page: number,
+    perPage: number,
+  ): Promise<[users: User[], total: number]> {
+    return this.usersRepository.findAndCount({
+      skip: (page - 1) * perPage,
+      take: perPage,
+    });
   }
 
   findOne(userId: number): Promise<User | null> {

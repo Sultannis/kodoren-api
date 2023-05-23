@@ -7,7 +7,7 @@ async function bootstrap() {
 
   console.log('starting');
 
-  app.useGlobalPipes(new ValidationPipe());
+  app.useGlobalPipes(new ValidationPipe({ transform: true }));
 
   await app.listen(3000);
 }
