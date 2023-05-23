@@ -1,3 +1,3 @@
-import { PaginationDto } from 'src/common-dto/pagination.dto';
+import { PaginationDto } from 'src/shared/common-dto/pagination.dto';
 
 export class FindAllUsersQueryDto extends PaginationDto {}

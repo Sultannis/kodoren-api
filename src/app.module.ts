@@ -8,7 +8,7 @@ import { AuthModule } from './modules/auth/auth.module';
 import { CoursesModule } from './modules/courses/courses.module';
 import { Course } from './modules/courses/entities/course.entity';
 import { HealthModule } from './modules/health/health.module';
-import { UserCourse } from './join-entities/user-courses.entity';
+import { UserCourse } from './shared/join-entities/user-courses.entity';
 import { Lesson } from './modules/lessons/entities/lesson.entity';
 
 @Module({

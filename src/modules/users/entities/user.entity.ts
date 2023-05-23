@@ -1,5 +1,5 @@
 import { Exclude } from 'class-transformer';
-import { UserCourse } from 'src/join-entities/user-courses.entity';
+import { UserCourse } from 'src/shared/join-entities/user-courses.entity';
 import {
   Entity,
   Column,
