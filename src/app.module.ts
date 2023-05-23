@@ -8,6 +8,8 @@ import { AuthModule } from './modules/auth/auth.module';
 import { CoursesModule } from './modules/courses/courses.module';
 import { Course } from './modules/courses/entities/course.entity';
 import { HealthModule } from './modules/health/health.module';
+import { UserCourse } from './join-entities/user-courses.entity';
+import { Lesson } from './modules/lessons/entities/lesson.entity';
 
 @Module({
   imports: [
@@ -15,7 +17,7 @@ import { HealthModule } from './modules/health/health.module';
     HealthModule,
     TypeOrmModule.forRoot({
       ...datasource,
-      entities: [User, Course],
+      entities: [User, Course, Lesson, UserCourse],
       ssl:
         process.env.APP_ENV === 'local'
           ? false

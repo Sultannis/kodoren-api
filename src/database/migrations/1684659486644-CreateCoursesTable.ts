@@ -8,7 +8,7 @@ export class CreateCoursesTable1684659486644 implements MigrationInterface {
         columns: [
           {
             name: 'id',
-            type: 'int',
+            type: 'bigint',
             isPrimary: true,
             isGenerated: true,
             generationStrategy: 'increment',

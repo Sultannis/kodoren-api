@@ -1,4 +1,5 @@
-import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
+import { UserCourse } from 'src/join-entities/user-courses.entity';
+import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
 
 @Entity('courses')
 export class Course {
@@ -22,6 +23,9 @@ export class Course {
     type: 'int',
   })
   totalLessons: number;
+
+  @OneToMany(() => UserCourse, (userCourse) => userCourse.course)
+  users: UserCourse[];
 
   @Column({
     name: 'created_at',

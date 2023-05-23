@@ -5,11 +5,11 @@ import {
   TableForeignKey,
 } from 'typeorm';
 
-export class CreateLessonsTable1684859525582 implements MigrationInterface {
+export class CreateUserCoursesTable1684867350493 implements MigrationInterface {
   public async up(queryRunner: QueryRunner): Promise<void> {
     await queryRunner.createTable(
       new Table({
-        name: 'lessons',
+        name: 'user_courses',
         columns: [
           {
             name: 'id',
@@ -19,56 +19,38 @@ export class CreateLessonsTable1684859525582 implements MigrationInterface {
             generationStrategy: 'increment',
           },
           {
-            name: 'title',
-            type: 'varchar',
+            name: 'user_id',
+            type: 'bigint',
           },
           {
             name: 'course_id',
             type: 'bigint',
           },
           {
-            name: 'theory_content_url',
-            type: 'varchar',
-          },
-          {
-            name: 'code_content_url',
-            type: 'varchar',
-          },
-          {
-            name: 'code_file_entension',
-            type: 'varchar',
-          },
-          {
-            name: 'created_at',
+            name: 'completed_at',
             type: 'timestamp',
-            default: 'now()',
-          },
-          {
-            name: 'updated_at',
-            type: 'timestamp',
-            default: 'now()',
-          },
-          {
-            name: 'deleted_at',
-            type: 'timestamp',
-            isNullable: true,
           },
         ],
       }),
     );
 
-    await queryRunner.createForeignKey(
-      'lessons',
+    await queryRunner.createForeignKeys('user_courses', [
+      new TableForeignKey({
+        columnNames: ['user_id'],
+        referencedColumnNames: ['id'],
+        referencedTableName: 'users',
+        onDelete: 'CASCADE',
+      }),
       new TableForeignKey({
         columnNames: ['course_id'],
         referencedColumnNames: ['id'],
         referencedTableName: 'courses',
         onDelete: 'CASCADE',
       }),
-    );
+    ]);
   }
 
   public async down(queryRunner: QueryRunner): Promise<void> {
-    await queryRunner.dropTable('lessons');
+    await queryRunner.dropTable('user_courses');
   }
 }

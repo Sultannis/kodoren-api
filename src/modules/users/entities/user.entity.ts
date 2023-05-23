@@ -1,10 +1,12 @@
 import { Exclude } from 'class-transformer';
+import { UserCourse } from 'src/join-entities/user-courses.entity';
 import {
   Entity,
   Column,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
   DeleteDateColumn,
+  OneToMany,
 } from 'typeorm';
 
 @Entity('users')
@@ -37,6 +39,9 @@ export class User {
     type: 'varchar',
   })
   password: string;
+
+  @OneToMany(() => UserCourse, (userCourse) => userCourse.user)
+  courses: UserCourse[];
 
   @Column({
     name: 'created_at',
