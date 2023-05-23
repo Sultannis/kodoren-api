@@ -1,17 +1,19 @@
 import {
   Body,
+  ClassSerializerInterceptor,
   Controller,
   Delete,
   Get,
   Param,
-  ParseIntPipe,
   Patch,
   Query,
+  UseInterceptors,
 } from '@nestjs/common';
 import { UsersService } from './users.service';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { FindAllUsersQueryDto } from './dto/find-all-users-query.dto';
 
+@UseInterceptors(ClassSerializerInterceptor)
 @Controller('users')
 export class UsersController {
   constructor(private usersService: UsersService) {}
@@ -31,21 +33,25 @@ export class UsersController {
     };
   }
 
+  @Get(':userId')
+  async findOne(@Param('userId') userId: number) {
+    return {
+      user: await this.usersService.findOneById(userId),
+    };
+  }
+
   @Patch(':userId')
   async update(
     @Param('userId') userId: number,
     @Body() updateUserDto: UpdateUserDto,
   ) {
-    console.log(userId);
-
     return {
-      user: 'await this.usersService.update(userId, updateUserDto)',
-      //user: await this.usersService.update(userId, updateUserDto),
+      user: await this.usersService.update(userId, updateUserDto),
     };
   }
 
   @Delete(':userId')
-  async delete(@Param('userId', ParseIntPipe) userId: number) {
+  async delete(@Param('userId') userId: number) {
     return {
       user: await this.usersService.softDelete(userId),
     };
