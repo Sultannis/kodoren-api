@@ -1,8 +1,17 @@
-import { Controller, HttpStatus, HttpCode, Post, Body } from '@nestjs/common';
+import {
+  Controller,
+  HttpStatus,
+  HttpCode,
+  Post,
+  Body,
+  UseInterceptors,
+  ClassSerializerInterceptor,
+} from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { LogInDto } from './dto/log-in.dto';
 import { RegisterDto } from './dto/register.dto';
 
+@UseInterceptors(ClassSerializerInterceptor)
 @Controller('auth')
 export class AuthController {
   constructor(private readonly authService: AuthService) {}
@@ -15,13 +24,9 @@ export class AuthController {
       logInDto.password,
     );
 
-    const { password, ...userWithoutPassword } = user;
-
     return {
       authToken,
-      user: {
-        ...userWithoutPassword,
-      },
+      user,
     };
   }
 
@@ -32,13 +37,9 @@ export class AuthController {
       registerDto.password,
     );
 
-    const { password, ...userWithoutPassword } = user;
-
     return {
       authToken,
-      user: {
-        ...userWithoutPassword,
-      },
+      user,
     };
   }
 }

@@ -34,7 +34,7 @@ export class AuthService {
   }
 
   async register(email: string, password: string) {
-    let user = await this.usersService.findByEmail(email);
+    let user = await this.usersService.findByEmail(email, true);
     if (user) {
       throw new ConflictException('User already exists');
     }

@@ -32,8 +32,11 @@ export class UsersService {
     return this.usersRepository.findOneBy({ id: userId });
   }
 
-  findByEmail(email: string): Promise<User | null> {
-    return this.usersRepository.findOneBy({ email });
+  findByEmail(
+    email: string,
+    withDeleted: boolean = false,
+  ): Promise<User | null> {
+    return this.usersRepository.findOne({ where: { email }, withDeleted });
   }
 
   async update(userId: number, payload: UpdateUserDto): Promise<User> {
