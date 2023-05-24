@@ -2,14 +2,32 @@ import { Injectable } from '@nestjs/common';
 import { Lesson } from './entities/lesson.entity';
 import { Repository } from 'typeorm';
 import { CreateLessonsDto } from './dto/create-lessons.dto';
+import { CoursesService } from '../courses/courses.service';
+import { InjectRepository } from '@nestjs/typeorm';
 
 @Injectable()
-export class LessonService {
-  constructor(private lessonsRespository: Repository<Lesson>) {}
+export class LessonsService {
+  constructor(
+    @InjectRepository(Lesson)
+    private lessonsRepository: Repository<Lesson>,
+    private coursesService: CoursesService,
+  ) {}
 
   async create(payload: CreateLessonsDto): Promise<Lesson> {
-    const lesson = this.lessonsRespository.create(payload);
+    await this.coursesService.findOne(payload.courseId);
 
-    return this.lessonsRespository.save(lesson);
+    const lesson = this.lessonsRepository.create(payload);
+
+    return this.lessonsRepository.save(lesson);
+  }
+
+  async findAll(
+    page: number,
+    perPage: number,
+  ): Promise<[lessons: Lesson[], total: number]> {
+    return this.lessonsRepository.findAndCount({
+      skip: (page - 1) * perPage,
+      take: perPage,
+    });
   }
 }
