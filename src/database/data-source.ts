@@ -20,7 +20,10 @@ export const datasource: {
 export const AppDataSource = new DataSource({
   ...datasource,
   migrations: ['src/database/migrations/*{.ts,.js}'],
-  entities: ['src/modules/**/**.entity{.ts,.js}'],
+  entities: [
+    'src/modules/**/**.entity{.ts,.js}',
+    'src/shared/**/**.entity{.ts,.js}',
+  ],
   ssl:
     appConfig.appEnv === 'local'
       ? false

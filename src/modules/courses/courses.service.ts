@@ -19,7 +19,10 @@ export class CoursesService {
   }
 
   findAll(): Promise<Course[]> {
-    return this.coursesRepository.find();
+    return this.coursesRepository
+      .createQueryBuilder()
+      .leftJoinAndSelect('Course.users', 'User')
+      .getMany();
   }
 
   findOne(id: number) {

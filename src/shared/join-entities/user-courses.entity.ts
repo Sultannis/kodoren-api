@@ -1,11 +1,10 @@
-import { Course } from 'src/modules/courses/entities/course.entity';
-import { User } from 'src/modules/users/entities/user.entity';
+import { Course } from '../../modules/courses/entities/course.entity';
+import { User } from '../../modules/users/entities/user.entity';
 import {
   Column,
   Entity,
   JoinColumn,
   ManyToOne,
-  OneToMany,
   PrimaryGeneratedColumn,
 } from 'typeorm';
 
