@@ -19,5 +19,5 @@ export class CreateLessonsDto {
 
   @IsNotEmpty()
   @IsString()
-  codeFilegUrl: string;
+  codeFileExtension: string;
 }

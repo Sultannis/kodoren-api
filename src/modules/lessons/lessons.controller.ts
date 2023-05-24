@@ -1,7 +1,7 @@
-import { Body, Controller, Post, Get, Query } from '@nestjs/common';
+import { Body, Controller, Post, Get, Query, Param } from '@nestjs/common';
 import { LessonsService } from './lessons.service';
 import { CreateLessonsDto } from './dto/create-lessons.dto';
-import { PaginationDto } from 'src/shared/common-dto/pagination.dto';
+import { FindAllLessonsDto } from './dto/find-all-lessons.dto';
 
 @Controller('lessons')
 export class LessonsController {
@@ -13,7 +13,22 @@ export class LessonsController {
   }
 
   @Get()
-  async findAll(@Query() query: PaginationDto) {
-    return this.lessonsService.findAll(query.page, query.perPage);
+  async findAll(@Query() query: FindAllLessonsDto) {
+    const { page } = query;
+
+    const [lessons, total] = await this.lessonsService.findAll(query);
+
+    return {
+      lessons,
+      meta: {
+        total,
+        page,
+      },
+    };
+  }
+
+  @Get(':lessonId')
+  async findOne(@Param('lessonId') lessonId: number) {
+    return this.lessonsService.findOneById(lessonId);
   }
 }

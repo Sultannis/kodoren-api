@@ -35,7 +35,7 @@ export class CreateLessonsTable1684859525582 implements MigrationInterface {
             type: 'varchar',
           },
           {
-            name: 'code_file_entension',
+            name: 'code_file_extension',
             type: 'varchar',
           },
           {
