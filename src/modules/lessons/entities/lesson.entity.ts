@@ -1,3 +1,4 @@
+import { UserLesson } from 'src/shared/join-entities/user-lesson.entity';
 import { Course } from '../../../modules/courses/entities/course.entity';
 import {
   Entity,
@@ -7,6 +8,7 @@ import {
   DeleteDateColumn,
   ManyToOne,
   JoinColumn,
+  OneToMany,
 } from 'typeorm';
 
 @Entity('lessons')
@@ -47,6 +49,9 @@ export class Lesson {
     type: 'varchar',
   })
   codeFileExtension: string;
+
+  @OneToMany(() => UserLesson, (userLesson) => userLesson.lesson)
+  users: UserLesson[];
 
   @Column({
     name: 'created_at',

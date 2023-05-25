@@ -8,9 +8,10 @@ import { AuthModule } from './modules/auth/auth.module';
 import { CoursesModule } from './modules/courses/courses.module';
 import { Course } from './modules/courses/entities/course.entity';
 import { HealthModule } from './modules/health/health.module';
-import { UserCourse } from './shared/join-entities/user-courses.entity';
+import { UserCourse } from './shared/join-entities/user-course.entity';
 import { Lesson } from './modules/lessons/entities/lesson.entity';
 import { LessonsModule } from './modules/lessons/lessons.module';
+import { UserLesson } from './shared/join-entities/user-lesson.entity';
 
 @Module({
   imports: [
@@ -19,7 +20,7 @@ import { LessonsModule } from './modules/lessons/lessons.module';
     HealthModule,
     TypeOrmModule.forRoot({
       ...datasource,
-      entities: [User, Course, Lesson, UserCourse],
+      entities: [User, Course, Lesson, UserCourse, UserLesson],
       ssl:
         process.env.APP_ENV === 'local'
           ? false

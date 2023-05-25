@@ -1,5 +1,5 @@
 import { Exclude } from 'class-transformer';
-import { UserCourse } from '../../../shared/join-entities/user-courses.entity';
+import { UserCourse } from '../../../shared/join-entities/user-course.entity';
 import {
   Entity,
   Column,
@@ -8,6 +8,7 @@ import {
   DeleteDateColumn,
   OneToMany,
 } from 'typeorm';
+import { UserLesson } from 'src/shared/join-entities/user-lesson.entity';
 
 @Entity('users')
 export class User {
@@ -42,6 +43,9 @@ export class User {
 
   @OneToMany(() => UserCourse, (userCourse) => userCourse.user)
   courses: UserCourse[];
+
+  @OneToMany(() => UserLesson, (userLesson) => userLesson.user)
+  lessons: UserLesson[];
 
   @Column({
     name: 'created_at',

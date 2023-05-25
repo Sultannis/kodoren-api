@@ -1,5 +1,5 @@
-import { Lesson } from 'src/modules/lessons/entities/lesson.entity';
-import { UserCourse } from '../../../shared/join-entities/user-courses.entity';
+import { Lesson } from '../../../modules/lessons/entities/lesson.entity';
+import { UserCourse } from '../../../shared/join-entities/user-course.entity';
 import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
 
 @Entity('courses')
