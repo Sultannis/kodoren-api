@@ -1,3 +1,4 @@
+import { Lesson } from 'src/modules/lessons/entities/lesson.entity';
 import { UserCourse } from '../../../shared/join-entities/user-courses.entity';
 import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
 
@@ -26,6 +27,9 @@ export class Course {
 
   @OneToMany(() => UserCourse, (userCourse) => userCourse.course)
   users: UserCourse[];
+
+  @OneToMany(() => Lesson, (lesson) => lesson.course)
+  lessons: Lesson[];
 
   @Column({
     name: 'created_at',

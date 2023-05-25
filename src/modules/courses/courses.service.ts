@@ -21,6 +21,7 @@ export class CoursesService {
   findAll(): Promise<Course[]> {
     return this.coursesRepository
       .createQueryBuilder()
+      .loadRelationCountAndMap('Course.totalLessons', 'Course.lessons')
       .leftJoinAndSelect('Course.users', 'User')
       .getMany();
   }
