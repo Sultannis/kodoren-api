@@ -19,12 +19,6 @@ export class Course {
   })
   description: string;
 
-  @Column({
-    name: 'total_lessons',
-    type: 'int',
-  })
-  totalLessons: number;
-
   @OneToMany(() => UserCourse, (userCourse) => userCourse.course)
   users: UserCourse[];
 

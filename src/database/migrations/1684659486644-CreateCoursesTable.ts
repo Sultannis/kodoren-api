@@ -24,11 +24,6 @@ export class CreateCoursesTable1684659486644 implements MigrationInterface {
             isNullable: false,
           },
           {
-            name: 'total_lessons',
-            type: 'int',
-            isNullable: false,
-          },
-          {
             name: 'created_at',
             type: 'timestamp',
             default: 'now()',

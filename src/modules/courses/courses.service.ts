@@ -22,7 +22,6 @@ export class CoursesService {
     return this.coursesRepository
       .createQueryBuilder()
       .loadRelationCountAndMap('Course.totalLessons', 'Course.lessons')
-      .leftJoinAndSelect('Course.users', 'User')
       .getMany();
   }
 
@@ -35,8 +34,10 @@ export class CoursesService {
     return course;
   }
 
-  update(id: number, updateCourseDto: UpdateCourseDto) {
-    return `This action updates a #${id} course`;
+  async update(courseId: number, updateCourseDto: UpdateCourseDto) {
+    const course = await this.coursesRepository.findOneBy({ id: courseId });
+
+    return course;
   }
 
   remove(id: number) {
