@@ -29,18 +29,21 @@ export class CoursesController {
     };
   }
 
-  @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.coursesService.findOne(+id);
+  @Get(':courseId')
+  findOne(@Param('courseId') courseId: number) {
+    return this.coursesService.findOne(courseId);
   }
 
-  @Patch(':id')
-  update(@Param('id') id: string, @Body() updateCourseDto: UpdateCourseDto) {
-    return this.coursesService.update(+id, updateCourseDto);
+  @Patch(':courseId')
+  update(
+    @Param('courseId') courseId: number,
+    @Body() updateCourseDto: UpdateCourseDto,
+  ) {
+    return this.coursesService.update(courseId, updateCourseDto);
   }
 
-  @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.coursesService.remove(+id);
+  @Delete(':courseId')
+  delete(@Param('courseId') courseId: number) {
+    return this.coursesService.softDelete(courseId);
   }
 }

@@ -36,11 +36,25 @@ export class CoursesService {
 
   async update(courseId: number, updateCourseDto: UpdateCourseDto) {
     const course = await this.coursesRepository.findOneBy({ id: courseId });
+    if (!course) {
+      throw new NotFoundException(`Course not found`);
+    }
 
-    return course;
+    await this.coursesRepository.update(courseId, updateCourseDto);
+    return this.coursesRepository.findOneBy({ id: courseId });
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} course`;
+  async softDelete(courseId: number) {
+    const course = await this.coursesRepository.findOneBy({ id: courseId });
+    if (!course) {
+      throw new NotFoundException(`Course not found`);
+    }
+
+    await this.coursesRepository.softDelete(courseId);
+
+    return this.coursesRepository.findOne({
+      where: { id: courseId },
+      withDeleted: true,
+    });
   }
 }

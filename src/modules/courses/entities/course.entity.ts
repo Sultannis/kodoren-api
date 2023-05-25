@@ -1,6 +1,14 @@
 import { Lesson } from '../../../modules/lessons/entities/lesson.entity';
 import { UserCourse } from '../../../shared/join-entities/user-course.entity';
-import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
+import {
+  Column,
+  CreateDateColumn,
+  DeleteDateColumn,
+  Entity,
+  OneToMany,
+  PrimaryGeneratedColumn,
+  UpdateDateColumn,
+} from 'typeorm';
 
 @Entity('courses')
 export class Course {
@@ -25,21 +33,21 @@ export class Course {
   @OneToMany(() => Lesson, (lesson) => lesson.course)
   lessons: Lesson[];
 
-  @Column({
+  @CreateDateColumn({
     name: 'created_at',
     type: 'timestamp',
     default: 'now()',
   })
   createdAt: string;
 
-  @Column({
+  @UpdateDateColumn({
     name: 'updated_at',
     type: 'timestamp',
     default: 'now()',
   })
   updatedAt: string;
 
-  @Column({
+  @DeleteDateColumn({
     name: 'deleted_at',
     type: 'timestamp',
     nullable: true,
