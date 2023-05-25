@@ -27,6 +27,13 @@ export class Course {
   })
   description: string;
 
+  @Column({
+    name: 'free',
+    type: 'boolean',
+    default: false,
+  })
+  free: boolean;
+
   @OneToMany(() => UserCourse, (userCourse) => userCourse.course)
   users: UserCourse[];
 

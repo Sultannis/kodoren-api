@@ -1,5 +1,5 @@
-import { Lesson } from 'src/modules/lessons/entities/lesson.entity';
-import { User } from 'src/modules/users/entities/user.entity';
+import { Lesson } from '../../modules/lessons/entities/lesson.entity';
+import { User } from '../../modules/users/entities/user.entity';
 import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
 
 @Entity('user_lessons')

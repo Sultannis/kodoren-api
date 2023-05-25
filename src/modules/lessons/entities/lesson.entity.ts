@@ -1,4 +1,4 @@
-import { UserLesson } from 'src/shared/join-entities/user-lesson.entity';
+import { UserLesson } from '../../../shared/join-entities/user-lesson.entity';
 import { Course } from '../../../modules/courses/entities/course.entity';
 import {
   Entity,
@@ -31,6 +31,13 @@ export class Lesson {
   @ManyToOne(() => Course)
   @JoinColumn({ name: 'course_id' })
   course: Course;
+
+  @Column({
+    name: 'free',
+    type: 'boolean',
+    default: false,
+  })
+  free: boolean;
 
   @Column({
     name: 'theory_content_url',

@@ -27,6 +27,11 @@ export class CreateLessonsTable1684859525582 implements MigrationInterface {
             type: 'bigint',
           },
           {
+            name: 'free',
+            type: 'boolean',
+            default: false,
+          },
+          {
             name: 'theory_content_url',
             type: 'varchar',
           },

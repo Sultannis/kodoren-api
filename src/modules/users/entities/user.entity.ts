@@ -1,5 +1,4 @@
 import { Exclude } from 'class-transformer';
-import { UserCourse } from '../../../shared/join-entities/user-course.entity';
 import {
   Entity,
   Column,
@@ -8,7 +7,8 @@ import {
   DeleteDateColumn,
   OneToMany,
 } from 'typeorm';
-import { UserLesson } from 'src/shared/join-entities/user-lesson.entity';
+import { UserCourse } from '../../../shared/join-entities/user-course.entity';
+import { UserLesson } from '../../../shared/join-entities/user-lesson.entity';
 
 @Entity('users')
 export class User {
