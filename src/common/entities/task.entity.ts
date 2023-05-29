@@ -30,7 +30,13 @@ export class Task {
 
   @Column({
     name: 'code_to_include',
-    type: 'text',
+    type: 'jsonb',
   })
-  codeToInclude: string;
+  codeToInclude: string[];
+
+  @Column({
+    name: 'code_to_exclude',
+    type: 'jsonb',
+  })
+  codeToExclude: string[];
 }

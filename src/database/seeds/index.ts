@@ -1,6 +1,8 @@
 /* eslint-disable no-console */
 import { AppDataSource } from '../data-source';
 import { seedCourses } from './seeders/courses.seeder';
+import { seedLessons } from './seeders/lessons.seeder';
+import { seedTasks } from './seeders/tasks.seeder';
 import { seedUsers } from './seeders/users.seeder';
 
 const main = async () => {
@@ -12,8 +14,9 @@ const main = async () => {
 
   try {
     await seedUsers();
-
     await seedCourses();
+    await seedLessons();
+    await seedTasks();
   } catch (error) {
     console.log(error);
     process.exit(1);

@@ -27,7 +27,11 @@ export class CreateTasksTable1685396138713 implements MigrationInterface {
           },
           {
             name: 'code_to_include',
-            type: 'text',
+            type: 'jsonb',
+          },
+          {
+            name: 'code_to_exclude',
+            type: 'jsonb',
           },
         ],
       }),
