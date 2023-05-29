@@ -15,6 +15,7 @@ export class CreateTasksTable1685396138713 implements MigrationInterface {
             name: 'id',
             type: 'bigint',
             isPrimary: true,
+            isGenerated: true,
           },
           {
             name: 'description',

@@ -12,15 +12,14 @@ import { UserCourse } from './common/entities/user-course.entity';
 import { Lesson } from './common/entities/lesson.entity';
 import { LessonsModule } from './modules/lessons/lessons.module';
 import { UserLesson } from './common/entities/user-lesson.entity';
+import { TasksModule } from './modules/tasks/tasks.module';
+import { Task } from './common/entities/task.entity';
 
 @Module({
   imports: [
-    UsersModule,
-    LessonsModule,
-    HealthModule,
     TypeOrmModule.forRoot({
       ...datasource,
-      entities: [User, Course, Lesson, UserCourse, UserLesson],
+      entities: [User, Course, Lesson, UserCourse, UserLesson, Task],
       ssl:
         process.env.APP_ENV === 'local'
           ? false
@@ -28,8 +27,12 @@ import { UserLesson } from './common/entities/user-lesson.entity';
               ca: process.env.CACERT,
             },
     }),
+    HealthModule,
+    UsersModule,
+    LessonsModule,
     AuthModule,
     CoursesModule,
+    TasksModule,
   ],
 })
 export class AppModule {}
