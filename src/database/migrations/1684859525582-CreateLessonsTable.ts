@@ -32,11 +32,7 @@ export class CreateLessonsTable1684859525582 implements MigrationInterface {
             default: false,
           },
           {
-            name: 'theory_content_url',
-            type: 'varchar',
-          },
-          {
-            name: 'code_content_url',
+            name: 'code_content',
             type: 'varchar',
           },
           {

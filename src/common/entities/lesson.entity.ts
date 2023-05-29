@@ -41,16 +41,10 @@ export class Lesson {
   free: boolean;
 
   @Column({
-    name: 'theory_content_url',
+    name: 'code_content',
     type: 'varchar',
   })
-  theoryContentUrl: string;
-
-  @Column({
-    name: 'code_content_url',
-    type: 'varchar',
-  })
-  codeContentUrl: string;
+  codeContent: string;
 
   @Column({
     name: 'code_file_extension',
