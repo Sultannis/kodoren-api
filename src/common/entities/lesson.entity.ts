@@ -42,7 +42,7 @@ export class Lesson {
 
   @Column({
     name: 'code_content',
-    type: 'varchar',
+    type: 'text',
   })
   codeContent: string;
 

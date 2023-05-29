@@ -50,4 +50,6 @@ export const seedUsers = async () => {
   const repository = AppDataSource.getRepository(User);
 
   await repository.insert(USERS);
+
+  console.log('Seeded: Users');
 };

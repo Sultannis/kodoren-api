@@ -33,7 +33,7 @@ export class CreateLessonsTable1684859525582 implements MigrationInterface {
           },
           {
             name: 'code_content',
-            type: 'varchar',
+            type: 'text',
           },
           {
             name: 'code_file_extension',
