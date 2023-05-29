@@ -37,7 +37,10 @@ export class LessonsService {
   }
 
   async findOneById(lessonId: number): Promise<Lesson> {
-    const lesson = await this.lessonsRepository.findOneBy({ id: lessonId });
+    const lesson = await this.lessonsRepository.findOne({
+      where: { id: lessonId },
+      relations: ['tasks'],
+    });
     if (!lesson) {
       throw new NotFoundException('Lesson not found');
     }

@@ -1,4 +1,11 @@
-import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
+import {
+  Column,
+  Entity,
+  JoinColumn,
+  ManyToOne,
+  PrimaryGeneratedColumn,
+} from 'typeorm';
+import { Lesson } from './lesson.entity';
 
 @Entity('tasks')
 export class Task {
@@ -10,6 +17,10 @@ export class Task {
     type: 'bigint',
   })
   lessonId: number;
+
+  @JoinColumn({ name: 'lesson_id' })
+  @ManyToOne(() => Lesson, (lesson) => lesson.tasks)
+  lesson: Lesson;
 
   @Column({
     name: 'description',

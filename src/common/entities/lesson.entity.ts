@@ -10,6 +10,7 @@ import {
   JoinColumn,
   OneToMany,
 } from 'typeorm';
+import { Task } from './task.entity';
 
 @Entity('lessons')
 export class Lesson {
@@ -59,6 +60,9 @@ export class Lesson {
 
   @OneToMany(() => UserLesson, (userLesson) => userLesson.lesson)
   users: UserLesson[];
+
+  @OneToMany(() => Task, (task) => task.lesson)
+  tasks: Task[];
 
   @Column({
     name: 'created_at',
