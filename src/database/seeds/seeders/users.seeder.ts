@@ -1,5 +1,5 @@
 import { AppDataSource } from '../../data-source';
-import { User } from '../../../modules/users/entities/user.entity';
+import { User } from '../../../common/entities/user.entity';
 
 const USERS = [
   {

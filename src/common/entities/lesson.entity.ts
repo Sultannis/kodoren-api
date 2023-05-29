@@ -1,5 +1,5 @@
-import { UserLesson } from '../../../shared/join-entities/user-lesson.entity';
-import { Course } from '../../../modules/courses/entities/course.entity';
+import { UserLesson } from './user-lesson.entity';
+import { Course } from './course.entity';
 import {
   Entity,
   PrimaryGeneratedColumn,

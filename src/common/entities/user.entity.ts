@@ -7,8 +7,8 @@ import {
   DeleteDateColumn,
   OneToMany,
 } from 'typeorm';
-import { UserCourse } from '../../../shared/join-entities/user-course.entity';
-import { UserLesson } from '../../../shared/join-entities/user-lesson.entity';
+import { UserCourse } from './user-course.entity';
+import { UserLesson } from './user-lesson.entity';
 
 @Entity('users')
 export class User {

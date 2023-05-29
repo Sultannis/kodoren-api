@@ -1,5 +1,5 @@
-import { Lesson } from '../../../modules/lessons/entities/lesson.entity';
-import { UserCourse } from '../../../shared/join-entities/user-course.entity';
+import { Lesson } from './lesson.entity';
+import { UserCourse } from './user-course.entity';
 import {
   Column,
   CreateDateColumn,

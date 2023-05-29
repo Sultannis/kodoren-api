@@ -1,5 +1,5 @@
-import { Course } from '../../modules/courses/entities/course.entity';
-import { User } from '../../modules/users/entities/user.entity';
+import { Course } from './course.entity';
+import { User } from './user.entity';
 import {
   Column,
   Entity,
