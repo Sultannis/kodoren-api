@@ -30,8 +30,10 @@ export class CoursesController {
   }
 
   @Get(':courseId')
-  findOne(@Param('courseId') courseId: number) {
-    return this.coursesService.findOne(courseId);
+  async findOne(@Param('courseId') courseId: number) {
+    return {
+      course: await this.coursesService.findOne(courseId),
+    };
   }
 
   @Patch(':courseId')

@@ -29,6 +29,7 @@ export class CreateUserLessonsTable1685016536375 implements MigrationInterface {
           {
             name: 'completed_at',
             type: 'timestamp',
+            default: 'now()',
           },
         ],
       }),

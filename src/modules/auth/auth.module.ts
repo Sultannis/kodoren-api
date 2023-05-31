@@ -11,7 +11,7 @@ import { appConfig } from 'src/config/app.config';
     JwtModule.register({
       global: true,
       secret: appConfig.jwtSecret,
-      signOptions: { expiresIn: '60s' },
+      signOptions: { expiresIn: '1h' },
     }),
   ],
   providers: [AuthService],

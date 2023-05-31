@@ -1,33 +1,38 @@
 import {
-  CanActivate,
+  CallHandler,
   ExecutionContext,
   Injectable,
-  UnauthorizedException,
+  NestInterceptor,
+  NestMiddleware,
 } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
-import { Request } from 'express';
+import { Request, Response } from 'express';
+import { Observable } from 'rxjs';
 import { appConfig } from 'src/config/app.config';
 
 @Injectable()
-export class JwtGuard implements CanActivate {
+export class JwtDecodeInterceptor implements NestInterceptor {
   constructor(private jwtService: JwtService) {}
 
-  async canActivate(context: ExecutionContext): Promise<boolean> {
+  async intercept(
+    context: ExecutionContext,
+    next: CallHandler,
+  ): Promise<Observable<any>> {
     const request = context.switchToHttp().getRequest();
     const token = this.extractTokenFromHeader(request);
     if (!token) {
-      throw new UnauthorizedException();
+      return next.handle();
     }
+
     try {
       const payload = await this.jwtService.verifyAsync(token, {
         secret: appConfig.jwtSecret,
       });
 
       request['user'] = payload;
-    } catch {
-      throw new UnauthorizedException();
-    }
-    return true;
+    } catch {}
+
+    return next.handle();
   }
 
   private extractTokenFromHeader(request: Request): string | undefined {

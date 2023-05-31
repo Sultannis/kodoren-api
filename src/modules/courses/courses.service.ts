@@ -26,7 +26,13 @@ export class CoursesService {
   }
 
   async findOne(courseId: number): Promise<Course> {
-    const course = await this.coursesRepository.findOneBy({ id: courseId });
+    const course = await this.coursesRepository
+      .createQueryBuilder('course')
+      .leftJoin('course.lessons', 'lesson')
+      .select(['course', 'lesson.id', 'lesson.title'])
+      .where('course.id = :id', { id: courseId })
+      .getOne();
+
     if (!course) {
       throw new NotFoundException(`Course not found`);
     }
