@@ -33,14 +33,24 @@ export class LessonsService {
     page,
     perPage,
     courseId,
+    userId,
   }: FindAllLessonsDto): Promise<[lessons: Lesson[], total: number]> {
-    return this.lessonsRepository.findAndCount({
-      where: {
-        courseId: courseId ?? null,
-      },
-      skip: (page - 1) * perPage,
-      take: perPage,
-    });
+    const lessons = await this.lessonsRepository
+      .createQueryBuilder('lesson')
+      .loadRelationCountAndMap(
+        'lesson.completed',
+        'lesson.users',
+        'userLesson',
+        (qb) => qb.where('userLesson.userId = :userId', { userId }),
+      )
+      .where('lesson.courseId = :courseId', { courseId })
+      .skip((page - 1) * perPage)
+      .take(perPage)
+      .getMany();
+
+    const count = await this.lessonsRepository.count();
+
+    return [lessons, count];
   }
 
   async findOneById(lessonId: number, userId: number): Promise<Lesson> {

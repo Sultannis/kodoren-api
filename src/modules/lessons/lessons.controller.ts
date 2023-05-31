@@ -25,11 +25,15 @@ export class LessonsController {
     return this.lessonsService.create(createLessonsDto);
   }
 
+  @UseInterceptors(JwtDecodeInterceptor)
   @Get()
-  async findAll(@Query() query: FindAllLessonsDto) {
+  async findAll(@Req() req: Request, @Query() query: FindAllLessonsDto) {
     const { page } = query;
 
-    const [lessons, total] = await this.lessonsService.findAll(query);
+    const [lessons, total] = await this.lessonsService.findAll({
+      ...query,
+      userId: req.user?.id,
+    });
 
     return {
       lessons,

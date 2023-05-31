@@ -7,4 +7,9 @@ export class FindAllLessonsDto extends PaginationDto {
   @IsNumber()
   @Transform(({ value }) => parseInt(value))
   courseId: number;
+
+  @IsOptional()
+  @IsNumber()
+  @Transform(({ value }) => parseInt(value))
+  userId: number;
 }
