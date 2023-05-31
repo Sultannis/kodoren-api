@@ -1,4 +1,9 @@
-import { MigrationInterface, QueryRunner, Table } from 'typeorm';
+import {
+  MigrationInterface,
+  QueryRunner,
+  Table,
+  TableForeignKey,
+} from 'typeorm';
 
 export class CreateRefreshTokensTable1685388113430
   implements MigrationInterface
@@ -23,6 +28,16 @@ export class CreateRefreshTokensTable1685388113430
             type: 'varchar',
           },
         ],
+      }),
+    );
+
+    await queryRunner.createForeignKey(
+      'refresh_tokens',
+      new TableForeignKey({
+        columnNames: ['user_id'],
+        referencedTableName: 'users',
+        referencedColumnNames: ['id'],
+        onDelete: 'CASCADE',
       }),
     );
   }

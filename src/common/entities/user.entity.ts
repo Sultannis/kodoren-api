@@ -9,6 +9,7 @@ import {
 } from 'typeorm';
 import { UserCourse } from './user-course.entity';
 import { UserLesson } from './user-lesson.entity';
+import { RefreshToken } from './refresh-token.entity';
 
 @Entity('users')
 export class User {
@@ -46,6 +47,9 @@ export class User {
 
   @OneToMany(() => UserLesson, (userLesson) => userLesson.user)
   lessons: UserLesson[];
+
+  @OneToMany(() => RefreshToken, (refreshToken) => refreshToken.user)
+  refreshTokens: RefreshToken[];
 
   @Column({
     name: 'created_at',
