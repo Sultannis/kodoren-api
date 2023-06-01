@@ -18,7 +18,8 @@ import { RegisterDto } from './dto/register.dto';
 export class AuthController {
   constructor(private readonly authService: AuthService) {}
 
-  private refreshCookieMaxAge = 1000 * 60 * 60 * 12 * 365;
+  private refreshTokenCookieMaxAge = 1000 * 60 * 60 * 12 * 365;
+  private accessTokenCookieMaxAge = 1000 * 60 * 30;
 
   @HttpCode(HttpStatus.OK)
   @Post('login')
@@ -34,13 +35,13 @@ export class AuthController {
     res.cookie('refreshToken', refreshToken, {
       httpOnly: true,
       secure: true,
-      maxAge: this.refreshCookieMaxAge,
+      maxAge: this.refreshTokenCookieMaxAge,
     });
 
     res.cookie('accessToken', accessToken, {
       httpOnly: true,
       secure: true,
-      maxAge: 1000 * 60 * 30,
+      maxAge: this.accessTokenCookieMaxAge,
     });
 
     return {
@@ -49,14 +50,28 @@ export class AuthController {
   }
 
   @Post('register')
-  async register(@Body() registerDto: RegisterDto) {
-    const { authToken, user } = await this.authService.register(
+  async register(
+    @Res({ passthrough: true }) res: Response,
+    @Body() registerDto: RegisterDto,
+  ) {
+    const { accessToken, refreshToken, user } = await this.authService.register(
       registerDto.email,
       registerDto.password,
     );
 
+    res.cookie('refreshToken', refreshToken, {
+      httpOnly: true,
+      secure: true,
+      maxAge: this.refreshTokenCookieMaxAge,
+    });
+
+    res.cookie('accessToken', accessToken, {
+      httpOnly: true,
+      secure: true,
+      maxAge: this.accessTokenCookieMaxAge,
+    });
+
     return {
-      authToken,
       user,
     };
   }

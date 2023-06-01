@@ -36,14 +36,15 @@ export class AuthService {
 
     const refreshToken = await this.jwtService.signAsync({
       id: user.id,
+      isRefreshToken: true,
     });
 
-    const savedRefreshToken = this.refreshTokensRepository.create({
+    const refreshTokenRecord = this.refreshTokensRepository.create({
       userId: user.id,
       token: refreshToken,
     });
 
-    await this.refreshTokensRepository.save(savedRefreshToken);
+    await this.refreshTokensRepository.save(refreshTokenRecord);
 
     return {
       accessToken,
@@ -62,8 +63,23 @@ export class AuthService {
 
     user = await this.usersService.register({ email, password: passwordHash });
 
+    const accessToken = await this.jwtService.signAsync({ id: user.id });
+
+    const refreshToken = await this.jwtService.signAsync({
+      id: user.id,
+      isRefreshToken: true,
+    });
+
+    const savedRefreshRecord = this.refreshTokensRepository.create({
+      userId: user.id,
+      token: refreshToken,
+    });
+
+    await this.refreshTokensRepository.save(savedRefreshRecord);
+
     return {
-      authToken: await this.jwtService.signAsync({ id: user.id }),
+      accessToken,
+      refreshToken,
       user,
     };
   }
