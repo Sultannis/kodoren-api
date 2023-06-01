@@ -4,14 +4,17 @@ import { AuthController } from './auth.controller';
 import { UsersModule } from '../users/users.module';
 import { JwtModule } from '@nestjs/jwt';
 import { appConfig } from 'src/config/app.config';
+import { TypeOrmModule } from '@nestjs/typeorm';
+import { RefreshToken } from 'src/common/entities/refresh-token.entity';
 
 @Module({
   imports: [
+    TypeOrmModule.forFeature([RefreshToken]),
     UsersModule,
     JwtModule.register({
       global: true,
       secret: appConfig.jwtSecret,
-      signOptions: { expiresIn: '1h' },
+      signOptions: { expiresIn: '30m' },
     }),
   ],
   providers: [AuthService],

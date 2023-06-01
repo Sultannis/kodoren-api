@@ -14,12 +14,21 @@ import { LessonsModule } from './modules/lessons/lessons.module';
 import { UserLesson } from './common/entities/user-lesson.entity';
 import { TasksModule } from './modules/tasks/tasks.module';
 import { Task } from './common/entities/task.entity';
+import { RefreshToken } from './common/entities/refresh-token.entity';
 
 @Module({
   imports: [
     TypeOrmModule.forRoot({
       ...datasource,
-      entities: [User, Course, Lesson, UserCourse, UserLesson, Task],
+      entities: [
+        User,
+        Course,
+        Lesson,
+        UserCourse,
+        UserLesson,
+        Task,
+        RefreshToken,
+      ],
       ssl:
         process.env.APP_ENV === 'local'
           ? false

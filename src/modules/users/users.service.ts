@@ -12,7 +12,7 @@ export class UsersService {
     private usersRepository: Repository<User>,
   ) {}
 
-  async register(payload: LogInDto): Promise<User> {
+  register(payload: LogInDto): Promise<User> {
     const user = this.usersRepository.create(payload);
 
     return this.usersRepository.save(user);

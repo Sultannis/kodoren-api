@@ -7,10 +7,15 @@ import {
 import { UsersService } from '../users/users.service';
 import * as bcrypt from 'bcrypt';
 import { JwtService } from '@nestjs/jwt';
+import { InjectRepository } from '@nestjs/typeorm';
+import { RefreshToken } from 'src/common/entities/refresh-token.entity';
+import { Repository } from 'typeorm';
 
 @Injectable()
 export class AuthService {
   constructor(
+    @InjectRepository(RefreshToken)
+    private refreshTokensRepository: Repository<RefreshToken>,
     private usersService: UsersService,
     private jwtService: JwtService,
   ) {}
@@ -27,8 +32,22 @@ export class AuthService {
       throw new UnauthorizedException('Wrong password');
     }
 
+    const accessToken = await this.jwtService.signAsync({ id: user.id });
+
+    const refreshToken = await this.jwtService.signAsync({
+      id: user.id,
+    });
+
+    const savedRefreshToken = this.refreshTokensRepository.create({
+      userId: user.id,
+      token: refreshToken,
+    });
+
+    await this.refreshTokensRepository.save(savedRefreshToken);
+
     return {
-      authToken: await this.jwtService.signAsync({ id: user.id }),
+      accessToken,
+      refreshToken,
       user,
     };
   }
