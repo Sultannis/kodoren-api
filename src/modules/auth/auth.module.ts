@@ -14,7 +14,7 @@ import { RefreshToken } from 'src/common/entities/refresh-token.entity';
     JwtModule.register({
       global: true,
       secret: appConfig.jwtSecret,
-      signOptions: { expiresIn: '30m' },
+      signOptions: { expiresIn: appConfig.accessTokenExpirationTime },
     }),
   ],
   providers: [AuthService],

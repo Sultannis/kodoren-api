@@ -12,22 +12,20 @@ import { Response } from 'express';
 import { AuthService } from './auth.service';
 import { LogInDto } from './dto/log-in.dto';
 import { RegisterDto } from './dto/register.dto';
+import { appConfig } from 'src/config/app.config';
 
 @UseInterceptors(ClassSerializerInterceptor)
 @Controller('auth')
 export class AuthController {
   constructor(private readonly authService: AuthService) {}
 
-  private refreshTokenCookieMaxAge = 1000 * 60 * 60 * 12 * 365;
-  private accessTokenCookieMaxAge = 1000 * 60 * 30;
-
   @HttpCode(HttpStatus.OK)
   @Post('login')
-  async logIn(
+  async login(
     @Res({ passthrough: true }) res: Response,
     @Body() logInDto: LogInDto,
   ) {
-    const { accessToken, refreshToken, user } = await this.authService.logIn(
+    const { accessToken, refreshToken, user } = await this.authService.login(
       logInDto.email,
       logInDto.password,
     );
@@ -35,13 +33,13 @@ export class AuthController {
     res.cookie('refreshToken', refreshToken, {
       httpOnly: true,
       secure: true,
-      maxAge: this.refreshTokenCookieMaxAge,
+      maxAge: appConfig.tokenCookieMaxAge,
     });
 
     res.cookie('accessToken', accessToken, {
       httpOnly: true,
       secure: true,
-      maxAge: this.accessTokenCookieMaxAge,
+      maxAge: appConfig.tokenCookieMaxAge,
     });
 
     return {
@@ -62,13 +60,13 @@ export class AuthController {
     res.cookie('refreshToken', refreshToken, {
       httpOnly: true,
       secure: true,
-      maxAge: this.refreshTokenCookieMaxAge,
+      maxAge: appConfig.tokenCookieMaxAge,
     });
 
     res.cookie('accessToken', accessToken, {
       httpOnly: true,
       secure: true,
-      maxAge: this.accessTokenCookieMaxAge,
+      maxAge: appConfig.tokenCookieMaxAge,
     });
 
     return {

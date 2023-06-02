@@ -20,7 +20,7 @@ export class AuthService {
     private jwtService: JwtService,
   ) {}
 
-  async logIn(email: string, password: string) {
+  async login(email: string, password: string) {
     const user = await this.usersService.findByEmail(email);
     if (!user) {
       throw new NotFoundException('User not found');
@@ -34,10 +34,15 @@ export class AuthService {
 
     const accessToken = await this.jwtService.signAsync({ id: user.id });
 
-    const refreshToken = await this.jwtService.signAsync({
-      id: user.id,
-      isRefreshToken: true,
-    });
+    const refreshToken = await this.jwtService.signAsync(
+      {
+        id: user.id,
+        isRefreshToken: true,
+      },
+      {
+        expiresIn: '30d',
+      },
+    );
 
     const refreshTokenRecord = this.refreshTokensRepository.create({
       userId: user.id,

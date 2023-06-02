@@ -12,4 +12,9 @@ export const appConfig = {
   dbName: process.env.DB_NAME,
 
   caCert: process.env.CA_CERT,
+
+  tokenCookieMaxAge: 1000 * 60 * 60 * 12 * 365,
+
+  refreshTokenExpirationTime: '30d',
+  accessTokenExpirationTime: '30m',
 };
