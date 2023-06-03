@@ -10,7 +10,8 @@ import { Response } from 'express';
 import { RefreshToken } from 'src/common/entities/refresh-token.entity';
 import { appConfig } from 'src/config/app.config';
 import { Repository } from 'typeorm';
-import { generateAndSaveRefreshToken } from '../helpers/generate-refresh-token';
+import { generateAndSaveRefreshToken } from '../helpers/generate-and-save-refresh-token';
+import { generateAccessToken } from '../helpers/generate-access-token';
 
 @Injectable()
 export class JwtGuard implements CanActivate {
@@ -19,8 +20,6 @@ export class JwtGuard implements CanActivate {
     private refreshTokenRepository: Repository<RefreshToken>,
     private jwtService: JwtService,
   ) {}
-
-  private tokenCookieMaxAge = 1000 * 60 * 60 * 12 * 365;
 
   async canActivate(context: ExecutionContext): Promise<boolean> {
     const request = context.switchToHttp().getRequest();
@@ -50,17 +49,13 @@ export class JwtGuard implements CanActivate {
           response,
         );
       } else {
+        response.clearCookie('accessToken');
+        response.clearCookie('refreshToken');
+
         throw new UnauthorizedException();
       }
     }
 
-    try {
-      const payload = await this.jwtService.verifyAsync(token, {
-        secret: appConfig.jwtSecret,
-      });
-
-      request['user'] = payload;
-    } catch {}
     return true;
   }
 
@@ -96,22 +91,26 @@ export class JwtGuard implements CanActivate {
       const newRefreshToken = await generateAndSaveRefreshToken(
         userId,
         this.jwtService,
-        this.refreshTokenRepository
+        this.refreshTokenRepository,
       );
 
-      const newAccessToken = await this.genearateAccessToken(userId);
+      const newAccessToken = await generateAccessToken(userId, this.jwtService);
 
       response.cookie('accessToken', newAccessToken, {
         httpOnly: true,
-        maxAge: this.tokenCookieMaxAge,
+        maxAge: appConfig.tokenCookieMaxAge,
+      });
+
+      response.cookie('refreshToken', newRefreshToken, {
+        httpOnly: true,
+        maxAge: appConfig.tokenCookieMaxAge,
       });
     } catch (err) {
+      response.clearCookie('accessToken');
+      response.clearCookie('refreshToken');
+
       throw new UnauthorizedException();
     }
-  }
-
-  private genearateAccessToken(userId: number): Promise<string> {
-    return this.jwtService.signAsync({ id: userId });
   }
 
   private deleteUserRefreshToken(userId: number) {
