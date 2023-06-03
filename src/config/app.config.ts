@@ -16,5 +16,5 @@ export const appConfig = {
   tokenCookieMaxAge: 1000 * 60 * 60 * 12 * 365,
 
   refreshTokenExpirationTime: '30d',
-  accessTokenExpirationTime: '30m',
+  accessTokenExpirationTime: '15m',
 };

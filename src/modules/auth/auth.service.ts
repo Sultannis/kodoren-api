@@ -10,6 +10,7 @@ import { JwtService } from '@nestjs/jwt';
 import { InjectRepository } from '@nestjs/typeorm';
 import { RefreshToken } from 'src/common/entities/refresh-token.entity';
 import { Repository } from 'typeorm';
+import { appConfig } from 'src/config/app.config';
 
 @Injectable()
 export class AuthService {
@@ -40,7 +41,7 @@ export class AuthService {
         isRefreshToken: true,
       },
       {
-        expiresIn: '30d',
+        expiresIn: appConfig.refreshTokenExpirationTime,
       },
     );
 
