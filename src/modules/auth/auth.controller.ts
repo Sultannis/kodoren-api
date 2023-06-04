@@ -7,12 +7,14 @@ import {
   UseInterceptors,
   ClassSerializerInterceptor,
   Res,
+  Req,
+  UnauthorizedException,
 } from '@nestjs/common';
-import { Response } from 'express';
 import { AuthService } from './auth.service';
 import { LogInDto } from './dto/log-in.dto';
 import { RegisterDto } from './dto/register.dto';
 import { appConfig } from 'src/config/app.config';
+import { Request, Response } from 'express';
 
 @UseInterceptors(ClassSerializerInterceptor)
 @Controller('auth')
@@ -72,5 +74,17 @@ export class AuthController {
     return {
       user,
     };
+  }
+
+  @Post('logout')
+  async logout(@Req() req: Request, @Res({ passthrough: true }) res: Response) {
+    const { accessToken, refreshToken } = req.cookies;
+
+    if (!accessToken && !refreshToken) {
+      throw new UnauthorizedException();
+    }
+
+    res.clearCookie('refreshToken');
+    res.clearCookie('accessToken');
   }
 }
