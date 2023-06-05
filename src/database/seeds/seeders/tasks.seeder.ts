@@ -3,7 +3,10 @@ import { Task } from '../../../common/entities/task.entity';
 
 const TASKS = [
   {
-    description: 'Remove the comment from the link tag',
+    title: 'Remove comments from code',
+    description:
+      'On 17’th line <span class="code-highlight">link</span> tag is surrounded with <span class="code-highlight"> &lt;!--</span> and <span class="code-highlight">--&gt;</span> comment symbols. Remove them to bring styles of the page back.',
+    checkboxText: 'Line uncommented',
     lessonId: 1,
     codeToInclude: [],
     codeToExclude: ['<!--', '-->'],

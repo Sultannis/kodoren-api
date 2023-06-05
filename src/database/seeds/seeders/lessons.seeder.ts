@@ -4,6 +4,8 @@ import { Lesson } from '../../../common/entities/lesson.entity';
 const LESSONS = [
   {
     title: 'İlk bug düzeltme',
+    description:
+      'Something is went wrong with the selling page. We need to fix is as soon as possible, otherwise Bunny boss will be really mad.',
     courseId: 1,
     free: true,
     codeContent: `<!DOCTYPE html>
