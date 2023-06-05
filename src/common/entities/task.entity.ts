@@ -23,10 +23,22 @@ export class Task {
   lesson: Lesson;
 
   @Column({
+    name: 'title',
+    type: 'varchar',
+  })
+  title: string;
+
+  @Column({
     name: 'description',
     type: 'text',
   })
   description: string;
+
+  @Column({
+    name: 'checkbox_text',
+    type: 'varchar',
+  })
+  checkboxText: string;
 
   @Column({
     name: 'code_to_include',

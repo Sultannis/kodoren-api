@@ -23,6 +23,11 @@ export class CreateLessonsTable1684859525582 implements MigrationInterface {
             type: 'varchar',
           },
           {
+            name: 'description',
+            type: 'text',
+            isNullable: true,
+          },
+          {
             name: 'course_id',
             type: 'bigint',
           },

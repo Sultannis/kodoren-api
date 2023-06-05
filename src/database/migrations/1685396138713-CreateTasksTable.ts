@@ -18,6 +18,14 @@ export class CreateTasksTable1685396138713 implements MigrationInterface {
             isGenerated: true,
           },
           {
+            name: 'title',
+            type: 'varchar',
+          },
+          {
+            name: 'checkbox_text',
+            type: 'varchar',
+          },
+          {
             name: 'description',
             type: 'text',
           },

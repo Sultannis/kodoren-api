@@ -62,6 +62,7 @@ export class LessonsService {
     const lesson = await this.lessonsRepository
       .createQueryBuilder('lesson')
       .where('lesson.id = :lessonId', { lessonId })
+      .leftJoinAndSelect('lesson.tasks', 'task')
       .getOne();
 
     if (!lesson) {

@@ -24,6 +24,13 @@ export class Lesson {
   title: string;
 
   @Column({
+    name: 'description',
+    type: 'text',
+    nullable: true,
+  })
+  description?: string;
+
+  @Column({
     name: 'course_id',
     type: 'bigint',
   })
