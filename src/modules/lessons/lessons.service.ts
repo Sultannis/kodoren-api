@@ -40,15 +40,17 @@ export class LessonsService {
       .skip((page - 1) * perPage)
       .take(perPage);
 
+    if (courseId) {
+      lessonsQuery.where('lesson.courseId = :courseId', { courseId });
+    }
+
     if (userId) {
-      lessonsQuery
-        .loadRelationCountAndMap(
-          'lesson.completed',
-          'lesson.users',
-          'userLesson',
-          (qb) => qb.where('userLesson.userId = :userId', { userId }),
-        )
-        .where('lesson.courseId = :courseId', { courseId });
+      lessonsQuery.loadRelationCountAndMap(
+        'lesson.completed',
+        'lesson.users',
+        'userLesson',
+        (qb) => qb.where('userLesson.userId = :userId', { userId }),
+      );
     }
 
     const lessons = await lessonsQuery.getMany();
@@ -76,9 +78,9 @@ export class LessonsService {
       });
 
       if (completed) {
-        lesson['completedAt'] = completed.completedAt;
+        lesson['completedAt'] = true;
       } else {
-        lesson['completedAt'] = null;
+        lesson['completedAt'] = false;
       }
     }
 

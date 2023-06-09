@@ -3,40 +3,124 @@ import {
   ExecutionContext,
   Injectable,
   NestInterceptor,
-  NestMiddleware,
+  UnauthorizedException,
 } from '@nestjs/common';
-import { JwtService } from '@nestjs/jwt';
 import { Request, Response } from 'express';
+import { JwtService } from '@nestjs/jwt';
+import { InjectRepository } from '@nestjs/typeorm';
 import { Observable } from 'rxjs';
+import { RefreshToken } from 'src/common/entities/refresh-token.entity';
 import { appConfig } from 'src/config/app.config';
+import { Repository } from 'typeorm/repository/Repository';
+import { generateAndSaveRefreshToken } from '../helpers/generate-and-save-refresh-token';
+import { generateAccessToken } from '../helpers/generate-access-token';
 
 @Injectable()
 export class JwtDecodeInterceptor implements NestInterceptor {
-  constructor(private jwtService: JwtService) {}
+  constructor(
+    @InjectRepository(RefreshToken)
+    private refreshTokenRepository: Repository<RefreshToken>,
+    private jwtService: JwtService,
+  ) {}
 
   async intercept(
     context: ExecutionContext,
     next: CallHandler,
   ): Promise<Observable<any>> {
     const request = context.switchToHttp().getRequest();
-    const token = this.extractTokenFromHeader(request);
-    if (!token) {
+    const response = context.switchToHttp().getResponse();
+
+    const { accessToken, refreshToken } = request.cookies;
+    if (!accessToken || !refreshToken) {
       return next.handle();
     }
 
     try {
-      const payload = await this.jwtService.verifyAsync(token, {
+      const payload = await this.jwtService.verifyAsync(accessToken, {
         secret: appConfig.jwtSecret,
       });
 
       request['user'] = payload;
-    } catch {}
+    } catch (err) {
+      if (err.name === 'TokenExpiredError') {
+        const user = await this.jwtService.verifyAsync(accessToken, {
+          secret: appConfig.jwtSecret,
+          ignoreExpiration: true,
+        });
+
+        await this.checkRefreshTokenAndReturnNewAccessToken(
+          refreshToken,
+          user.id,
+          response,
+        );
+
+        request['user'] = user;
+      } else {
+        response.clearCookie('accessToken');
+        response.clearCookie('refreshToken');
+
+        throw new UnauthorizedException();
+      }
+    }
 
     return next.handle();
   }
 
-  private extractTokenFromHeader(request: Request): string | undefined {
-    const [type, token] = request.headers.authorization?.split(' ') ?? [];
-    return type === 'Bearer' ? token : undefined;
+  private async checkRefreshTokenAndReturnNewAccessToken(
+    refreshToken: string,
+    userId: number,
+    response: Response,
+  ) {
+    try {
+      const userRefreshToken = await this.refreshTokenRepository.findOneBy({
+        userId,
+      });
+
+      if (!userRefreshToken) {
+        response.clearCookie('accessToken');
+        response.clearCookie('refreshToken');
+
+        throw new UnauthorizedException();
+      }
+
+      await this.deleteUserRefreshToken(userId);
+
+      await this.jwtService.verifyAsync(refreshToken, {
+        secret: appConfig.jwtSecret,
+      });
+
+      if (userRefreshToken.token !== refreshToken) {
+        response.clearCookie('accessToken');
+        response.clearCookie('refreshToken');
+        throw new UnauthorizedException();
+      }
+
+      const newRefreshToken = await generateAndSaveRefreshToken(
+        userId,
+        this.jwtService,
+        this.refreshTokenRepository,
+      );
+
+      const newAccessToken = await generateAccessToken(userId, this.jwtService);
+
+      response.cookie('accessToken', newAccessToken, {
+        httpOnly: true,
+        maxAge: appConfig.tokenCookieMaxAge,
+      });
+
+      response.cookie('refreshToken', newRefreshToken, {
+        httpOnly: true,
+        maxAge: appConfig.tokenCookieMaxAge,
+      });
+    } catch (err) {
+      response.clearCookie('accessToken');
+      response.clearCookie('refreshToken');
+
+      throw new UnauthorizedException();
+    }
+  }
+
+  private deleteUserRefreshToken(userId: number) {
+    return this.refreshTokenRepository.delete({ userId });
   }
 }

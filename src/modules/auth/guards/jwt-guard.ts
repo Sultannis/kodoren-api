@@ -48,6 +48,8 @@ export class JwtGuard implements CanActivate {
           user.id,
           response,
         );
+
+        request['user'] = user;
       } else {
         response.clearCookie('accessToken');
         response.clearCookie('refreshToken');

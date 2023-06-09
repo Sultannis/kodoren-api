@@ -56,7 +56,10 @@ export class LessonsController {
 
   @UseGuards(JwtGuard)
   @Post(':lessonId/complete')
-  async setAsCompleted(@Param('lesson') lessonId: number, @Req() req: Request) {
+  async setAsCompleted(
+    @Param('lessonId') lessonId: number,
+    @Req() req: Request,
+  ) {
     return {
       lesson: await this.lessonsService.setAsCompleted(lessonId, req.user.id),
     };
