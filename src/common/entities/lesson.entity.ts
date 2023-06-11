@@ -18,6 +18,12 @@ export class Lesson {
   id: number;
 
   @Column({
+    name: 'order',
+    type: 'int',
+  })
+  order: number;
+
+  @Column({
     name: 'title',
     type: 'varchar',
   })

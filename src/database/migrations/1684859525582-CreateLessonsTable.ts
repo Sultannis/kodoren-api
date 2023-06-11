@@ -19,6 +19,10 @@ export class CreateLessonsTable1684859525582 implements MigrationInterface {
             generationStrategy: 'increment',
           },
           {
+            name: 'order',
+            type: 'int',
+          },
+          {
             name: 'title',
             type: 'varchar',
           },

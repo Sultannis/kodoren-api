@@ -38,7 +38,8 @@ export class LessonsService {
     const lessonsQuery = this.lessonsRepository
       .createQueryBuilder('lesson')
       .skip((page - 1) * perPage)
-      .take(perPage);
+      .take(perPage)
+      .orderBy('lesson.order', 'ASC');
 
     if (courseId) {
       lessonsQuery.where('lesson.courseId = :courseId', { courseId });

@@ -3,6 +3,7 @@ import { Lesson } from '../../../common/entities/lesson.entity';
 
 const LESSONS = [
   {
+    order: 1,
     title: 'İlk bug düzeltme',
     description:
       'Something is went wrong with the selling page. We need to fix is as soon as possible, otherwise Bunny boss will be really mad.',
@@ -40,6 +41,7 @@ const LESSONS = [
     codeFileExtension: 'html',
   },
   {
+    order: 2,
     title: '2 bug düzeltme',
     description:
       'Something is went wrong with the selling page. We need to fix is as soon as possible, otherwise Bunny boss will be really mad.',
@@ -73,6 +75,7 @@ const LESSONS = [
     codeFileExtension: 'html',
   },
   {
+    order: 3,
     title: '3 bug düzeltme',
     description:
       'Something is went wrong with the selling page. We need to fix is as soon as possible, otherwise Bunny boss will be really mad.',
