@@ -77,11 +77,7 @@ export class LessonsService {
         userId,
       });
 
-      if (completed) {
-        lesson['completedAt'] = true;
-      } else {
-        lesson['completedAt'] = false;
-      }
+      lesson['completed'] = completed;
     }
 
     return lesson;

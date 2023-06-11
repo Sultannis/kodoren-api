@@ -77,13 +77,7 @@ export class AuthController {
   }
 
   @Post('logout')
-  async logout(@Req() req: Request, @Res({ passthrough: true }) res: Response) {
-    const { accessToken, refreshToken } = req.cookies;
-
-    if (!accessToken && !refreshToken) {
-      throw new UnauthorizedException();
-    }
-
+  async logout(@Res({ passthrough: true }) res: Response) {
     res.clearCookie('refreshToken');
     res.clearCookie('accessToken');
   }
