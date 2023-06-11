@@ -45,6 +45,16 @@ export class CreateLessonsTable1684859525582 implements MigrationInterface {
             type: 'varchar',
           },
           {
+            name: 'intro_dialog_lines',
+            type: 'jsonb',
+            default: "'[]'",
+          },
+          {
+            name: 'outro_dialog_lines',
+            type: 'jsonb',
+            default: "'[]'",
+          },
+          {
             name: 'created_at',
             type: 'timestamp',
             default: 'now()',

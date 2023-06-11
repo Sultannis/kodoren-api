@@ -33,6 +33,10 @@ const LESSONS = [
         </body>
     </html>
     `,
+    introDialogLines: [
+      'Hey, I am Bunny boss. I am the boss of this company. I am really mad because our selling page is broken. Fix it as soon as possible or you will be fired!',
+    ],
+    outroDialogLines: ['Good job! Would you like to work for me?'],
     codeFileExtension: 'html',
   },
   {

@@ -66,6 +66,18 @@ export class Lesson {
   tasks: Task[];
 
   @Column({
+    name: 'intro_dialog_lines',
+    type: 'jsonb',
+  })
+  introDialogLines: string[];
+
+  @Column({
+    name: 'outro_dialog_lines',
+    type: 'jsonb',
+  })
+  outroDialogLines: string[];
+
+  @Column({
     name: 'created_at',
     type: 'timestamp',
     default: 'now()',
