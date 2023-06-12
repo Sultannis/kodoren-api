@@ -78,7 +78,7 @@ export class LessonsService {
         userId,
       });
 
-      lesson['completed'] = completed;
+      lesson['completed'] = !!completed;
     }
 
     return lesson;
