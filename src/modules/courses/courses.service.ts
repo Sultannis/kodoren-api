@@ -18,11 +18,30 @@ export class CoursesService {
     return this.coursesRepository.save(course);
   }
 
-  findAll(): Promise<Course[]> {
-    return this.coursesRepository
-      .createQueryBuilder()
-      .loadRelationCountAndMap('Course.totalLessons', 'Course.lessons')
-      .getMany();
+  findAll(userId: number): Promise<Course[]> {
+    const coursesQuery = this.coursesRepository
+      .createQueryBuilder('course')
+      .loadRelationCountAndMap('course.totalLessons', 'course.lessons')
+      .loadRelationCountAndMap(
+        'course.freeLessons',
+        'course.lessons',
+        'lesson',
+        (qb) => qb.where('lesson.free = :isFree', { isFree: true }),
+      );
+
+    if (userId) {
+      coursesQuery.loadRelationCountAndMap(
+        'course.completedLessons',
+        'course.lessons',
+        'lesson',
+        (qb) =>
+          qb
+            .leftJoin('lesson.users', 'userLesson')
+            .andWhere('userLesson.userId = :userId', { userId }),
+      );
+    }
+
+    return coursesQuery.getMany();
   }
 
   async findOne(courseId: number): Promise<Course> {

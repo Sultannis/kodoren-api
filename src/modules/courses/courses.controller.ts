@@ -6,10 +6,14 @@ import {
   Patch,
   Param,
   Delete,
+  UseInterceptors,
+  Req,
 } from '@nestjs/common';
 import { CoursesService } from './courses.service';
 import { CreateCourseDto } from './dto/create-course.dto';
 import { UpdateCourseDto } from './dto/update-course.dto';
+import { JwtDecodeInterceptor } from '../auth/interceptors/jwt-decode.interceptor';
+import { Request } from 'express';
 
 @Controller('courses')
 export class CoursesController {
@@ -22,10 +26,11 @@ export class CoursesController {
     };
   }
 
+  @UseInterceptors(JwtDecodeInterceptor)
   @Get()
-  async findAll() {
+  async findAll(@Req() req: Request) {
     return {
-      courses: await this.coursesService.findAll(),
+      courses: await this.coursesService.findAll(req.user?.id),
     };
   }
 
