@@ -7,14 +7,12 @@ import {
   UseInterceptors,
   ClassSerializerInterceptor,
   Res,
-  Req,
-  UnauthorizedException,
 } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { LogInDto } from './dto/log-in.dto';
 import { RegisterDto } from './dto/register.dto';
 import { appConfig } from 'src/config/app.config';
-import { Request, Response } from 'express';
+import { Response } from 'express';
 
 @UseInterceptors(ClassSerializerInterceptor)
 @Controller('auth')
@@ -35,12 +33,15 @@ export class AuthController {
     res.cookie('refreshToken', refreshToken, {
       httpOnly: true,
       secure: true,
+      sameSite: 'none',
+
       maxAge: appConfig.tokenCookieMaxAge,
     });
 
     res.cookie('accessToken', accessToken, {
       httpOnly: true,
       secure: true,
+      sameSite: 'none',
       maxAge: appConfig.tokenCookieMaxAge,
     });
 
@@ -62,12 +63,14 @@ export class AuthController {
     res.cookie('refreshToken', refreshToken, {
       httpOnly: true,
       secure: true,
+      sameSite: 'none',
       maxAge: appConfig.tokenCookieMaxAge,
     });
 
     res.cookie('accessToken', accessToken, {
       httpOnly: true,
       secure: true,
+      sameSite: 'none',
       maxAge: appConfig.tokenCookieMaxAge,
     });
 

@@ -26,9 +26,8 @@ export class JwtGuard implements CanActivate {
     const response = context.switchToHttp().getResponse();
 
     const { accessToken, refreshToken } = request.cookies;
+    console.log(accessToken, refreshToken);
     if (!accessToken || !refreshToken) {
-      console.log(accessToken, refreshToken);
-
       throw new UnauthorizedException();
     }
 
