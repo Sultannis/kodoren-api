@@ -3,6 +3,7 @@ import {
   QueryRunner,
   Table,
   TableForeignKey,
+  TableUnique,
 } from 'typeorm';
 
 export class CreateUserLessonsTable1685016536375 implements MigrationInterface {
@@ -32,6 +33,13 @@ export class CreateUserLessonsTable1685016536375 implements MigrationInterface {
             default: 'now()',
           },
         ],
+      }),
+    );
+
+    await queryRunner.createUniqueConstraint(
+      'user_lessons',
+      new TableUnique({
+        columnNames: ['user_id', 'lesson_id'],
       }),
     );
 
