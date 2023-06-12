@@ -27,7 +27,8 @@ export class CoursesService {
         'course.lessons',
         'lesson',
         (qb) => qb.where('lesson.free = :isFree', { isFree: true }),
-      );
+      )
+      .orderBy('created_at', 'ASC');
 
     if (userId) {
       coursesQuery.loadRelationCountAndMap(
