@@ -27,6 +27,8 @@ export class JwtGuard implements CanActivate {
 
     const { accessToken, refreshToken } = request.cookies;
     if (!accessToken || !refreshToken) {
+      console.log(accessToken, refreshToken);
+
       throw new UnauthorizedException();
     }
 
@@ -54,6 +56,8 @@ export class JwtGuard implements CanActivate {
         response.clearCookie('accessToken');
         response.clearCookie('refreshToken');
 
+        console.log(accessToken, refreshToken);
+
         throw new UnauthorizedException();
       }
     }
@@ -74,6 +78,7 @@ export class JwtGuard implements CanActivate {
       if (!userRefreshToken) {
         response.clearCookie('accessToken');
         response.clearCookie('refreshToken');
+        console.log(refreshToken);
 
         throw new UnauthorizedException();
       }
@@ -87,6 +92,8 @@ export class JwtGuard implements CanActivate {
       if (userRefreshToken.token !== refreshToken) {
         response.clearCookie('accessToken');
         response.clearCookie('refreshToken');
+        console.log(refreshToken);
+
         throw new UnauthorizedException();
       }
 
@@ -110,6 +117,8 @@ export class JwtGuard implements CanActivate {
     } catch (err) {
       response.clearCookie('accessToken');
       response.clearCookie('refreshToken');
+
+      console.log(refreshToken);
 
       throw new UnauthorizedException();
     }
