@@ -1,33 +1,38 @@
 import {
-  CanActivate,
+  CallHandler,
   ExecutionContext,
   Injectable,
+  NestInterceptor,
   UnauthorizedException,
 } from '@nestjs/common';
+import { Request, Response } from 'express';
 import { JwtService } from '@nestjs/jwt';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Response } from 'express';
+import { Observable } from 'rxjs';
 import { RefreshToken } from 'src/common/entities/refresh-token.entity';
 import { appConfig } from 'src/config/app.config';
-import { Repository } from 'typeorm';
+import { Repository } from 'typeorm/repository/Repository';
 import { generateAndSaveRefreshToken } from '../helpers/generate-and-save-refresh-token';
 import { generateAccessToken } from '../helpers/generate-access-token';
 
 @Injectable()
-export class JwtGuard implements CanActivate {
+export class JwtDecodeInterceptor implements NestInterceptor {
   constructor(
     @InjectRepository(RefreshToken)
     private refreshTokenRepository: Repository<RefreshToken>,
     private jwtService: JwtService,
   ) {}
 
-  async canActivate(context: ExecutionContext): Promise<boolean> {
+  async intercept(
+    context: ExecutionContext,
+    next: CallHandler,
+  ): Promise<Observable<any>> {
     const request = context.switchToHttp().getRequest();
     const response = context.switchToHttp().getResponse();
 
     const { accessToken, refreshToken } = request.cookies;
     if (!accessToken || !refreshToken) {
-      throw new UnauthorizedException();
+      return next.handle();
     }
 
     try {
@@ -58,7 +63,7 @@ export class JwtGuard implements CanActivate {
       }
     }
 
-    return true;
+    return next.handle();
   }
 
   private async checkRefreshTokenAndReturnNewAccessToken(

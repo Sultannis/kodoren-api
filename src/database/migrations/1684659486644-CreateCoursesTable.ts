@@ -8,7 +8,7 @@ export class CreateCoursesTable1684659486644 implements MigrationInterface {
         columns: [
           {
             name: 'id',
-            type: 'int',
+            type: 'bigint',
             isPrimary: true,
             isGenerated: true,
             generationStrategy: 'increment',
@@ -24,9 +24,9 @@ export class CreateCoursesTable1684659486644 implements MigrationInterface {
             isNullable: false,
           },
           {
-            name: 'total_lessons',
-            type: 'int',
-            isNullable: false,
+            name: 'free',
+            type: 'boolean',
+            default: false,
           },
           {
             name: 'created_at',

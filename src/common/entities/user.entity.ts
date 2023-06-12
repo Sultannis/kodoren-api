@@ -1,4 +1,15 @@
-import { Entity, Column, PrimaryGeneratedColumn } from 'typeorm';
+import { Exclude } from 'class-transformer';
+import {
+  Entity,
+  Column,
+  PrimaryGeneratedColumn,
+  UpdateDateColumn,
+  DeleteDateColumn,
+  OneToMany,
+} from 'typeorm';
+import { UserCourse } from './user-course.entity';
+import { UserLesson } from './user-lesson.entity';
+import { RefreshToken } from './refresh-token.entity';
 
 @Entity('users')
 export class User {
@@ -24,11 +35,21 @@ export class User {
   })
   email: string;
 
+  @Exclude()
   @Column({
     name: 'password',
     type: 'varchar',
   })
   password: string;
+
+  @OneToMany(() => UserCourse, (userCourse) => userCourse.user)
+  courses: UserCourse[];
+
+  @OneToMany(() => UserLesson, (userLesson) => userLesson.user)
+  lessons: UserLesson[];
+
+  @OneToMany(() => RefreshToken, (refreshToken) => refreshToken.user)
+  refreshTokens: RefreshToken[];
 
   @Column({
     name: 'created_at',
@@ -37,14 +58,14 @@ export class User {
   })
   createdAt: string;
 
-  @Column({
+  @UpdateDateColumn({
     name: 'updated_at',
     type: 'timestamp',
     default: 'now()',
   })
   updatedAt: string;
 
-  @Column({
+  @DeleteDateColumn({
     name: 'deleted_at',
     type: 'timestamp',
     nullable: true,

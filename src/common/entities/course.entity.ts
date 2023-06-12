@@ -1,4 +1,14 @@
-import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
+import { Lesson } from './lesson.entity';
+import { UserCourse } from './user-course.entity';
+import {
+  Column,
+  CreateDateColumn,
+  DeleteDateColumn,
+  Entity,
+  OneToMany,
+  PrimaryGeneratedColumn,
+  UpdateDateColumn,
+} from 'typeorm';
 
 @Entity('courses')
 export class Course {
@@ -18,26 +28,33 @@ export class Course {
   description: string;
 
   @Column({
-    name: 'total_lessons',
-    type: 'int',
+    name: 'free',
+    type: 'boolean',
+    default: false,
   })
-  totalLessons: number;
+  free: boolean;
 
-  @Column({
+  @OneToMany(() => UserCourse, (userCourse) => userCourse.course)
+  users: UserCourse[];
+
+  @OneToMany(() => Lesson, (lesson) => lesson.course)
+  lessons: Lesson[];
+
+  @CreateDateColumn({
     name: 'created_at',
     type: 'timestamp',
     default: 'now()',
   })
   createdAt: string;
 
-  @Column({
+  @UpdateDateColumn({
     name: 'updated_at',
     type: 'timestamp',
     default: 'now()',
   })
   updatedAt: string;
 
-  @Column({
+  @DeleteDateColumn({
     name: 'deleted_at',
     type: 'timestamp',
     nullable: true,

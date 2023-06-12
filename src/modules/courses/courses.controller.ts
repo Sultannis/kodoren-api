@@ -6,10 +6,14 @@ import {
   Patch,
   Param,
   Delete,
+  UseInterceptors,
+  Req,
 } from '@nestjs/common';
 import { CoursesService } from './courses.service';
 import { CreateCourseDto } from './dto/create-course.dto';
 import { UpdateCourseDto } from './dto/update-course.dto';
+import { JwtDecodeInterceptor } from '../auth/interceptors/jwt-decode.interceptor';
+import { Request } from 'express';
 
 @Controller('courses')
 export class CoursesController {
@@ -22,25 +26,31 @@ export class CoursesController {
     };
   }
 
+  @UseInterceptors(JwtDecodeInterceptor)
   @Get()
-  async findAll() {
+  async findAll(@Req() req: Request) {
     return {
-      courses: await this.coursesService.findAll(),
+      courses: await this.coursesService.findAll(req.user?.id),
     };
   }
 
-  @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.coursesService.findOne(+id);
+  @Get(':courseId')
+  async findOne(@Param('courseId') courseId: number) {
+    return {
+      course: await this.coursesService.findOne(courseId),
+    };
   }
 
-  @Patch(':id')
-  update(@Param('id') id: string, @Body() updateCourseDto: UpdateCourseDto) {
-    return this.coursesService.update(+id, updateCourseDto);
+  @Patch(':courseId')
+  update(
+    @Param('courseId') courseId: number,
+    @Body() updateCourseDto: UpdateCourseDto,
+  ) {
+    return this.coursesService.update(courseId, updateCourseDto);
   }
 
-  @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.coursesService.remove(+id);
+  @Delete(':courseId')
+  delete(@Param('courseId') courseId: number) {
+    return this.coursesService.softDelete(courseId);
   }
 }

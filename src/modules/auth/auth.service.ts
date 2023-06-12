@@ -7,15 +7,21 @@ import {
 import { UsersService } from '../users/users.service';
 import * as bcrypt from 'bcrypt';
 import { JwtService } from '@nestjs/jwt';
+import { InjectRepository } from '@nestjs/typeorm';
+import { RefreshToken } from 'src/common/entities/refresh-token.entity';
+import { Repository } from 'typeorm';
+import { appConfig } from 'src/config/app.config';
 
 @Injectable()
 export class AuthService {
   constructor(
+    @InjectRepository(RefreshToken)
+    private refreshTokensRepository: Repository<RefreshToken>,
     private usersService: UsersService,
     private jwtService: JwtService,
   ) {}
 
-  async logIn(email: string, password: string) {
+  async login(email: string, password: string) {
     const user = await this.usersService.findByEmail(email);
     if (!user) {
       throw new NotFoundException('User not found');
@@ -27,14 +33,34 @@ export class AuthService {
       throw new UnauthorizedException('Wrong password');
     }
 
+    const accessToken = await this.jwtService.signAsync({ id: user.id });
+
+    const refreshToken = await this.jwtService.signAsync(
+      {
+        id: user.id,
+        isRefreshToken: true,
+      },
+      {
+        expiresIn: appConfig.refreshTokenExpirationTime,
+      },
+    );
+
+    const refreshTokenRecord = this.refreshTokensRepository.create({
+      userId: user.id,
+      token: refreshToken,
+    });
+
+    await this.refreshTokensRepository.save(refreshTokenRecord);
+
     return {
-      authToken: await this.jwtService.signAsync({ id: user.id }),
+      accessToken,
+      refreshToken,
       user,
     };
   }
 
   async register(email: string, password: string) {
-    let user = await this.usersService.findByEmail(email);
+    let user = await this.usersService.findByEmail(email, true);
     if (user) {
       throw new ConflictException('User already exists');
     }
@@ -43,8 +69,23 @@ export class AuthService {
 
     user = await this.usersService.register({ email, password: passwordHash });
 
+    const accessToken = await this.jwtService.signAsync({ id: user.id });
+
+    const refreshToken = await this.jwtService.signAsync({
+      id: user.id,
+      isRefreshToken: true,
+    });
+
+    const savedRefreshRecord = this.refreshTokensRepository.create({
+      userId: user.id,
+      token: refreshToken,
+    });
+
+    await this.refreshTokensRepository.save(savedRefreshRecord);
+
     return {
-      authToken: await this.jwtService.signAsync({ id: user.id }),
+      accessToken,
+      refreshToken,
       user,
     };
   }

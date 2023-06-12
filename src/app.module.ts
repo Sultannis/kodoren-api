@@ -3,19 +3,32 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { UsersModule } from './modules/users/users.module';
 import { datasource } from './database/data-source';
 
-import { User } from './modules/users/entities/user.entity';
+import { User } from './common/entities/user.entity';
 import { AuthModule } from './modules/auth/auth.module';
 import { CoursesModule } from './modules/courses/courses.module';
-import { Course } from './modules/courses/entities/course.entity';
+import { Course } from './common/entities/course.entity';
 import { HealthModule } from './modules/health/health.module';
+import { UserCourse } from './common/entities/user-course.entity';
+import { Lesson } from './common/entities/lesson.entity';
+import { LessonsModule } from './modules/lessons/lessons.module';
+import { UserLesson } from './common/entities/user-lesson.entity';
+import { TasksModule } from './modules/tasks/tasks.module';
+import { Task } from './common/entities/task.entity';
+import { RefreshToken } from './common/entities/refresh-token.entity';
 
 @Module({
   imports: [
-    UsersModule,
-    HealthModule,
     TypeOrmModule.forRoot({
       ...datasource,
-      entities: [User, Course],
+      entities: [
+        User,
+        Course,
+        Lesson,
+        UserCourse,
+        UserLesson,
+        Task,
+        RefreshToken,
+      ],
       ssl:
         process.env.APP_ENV === 'local'
           ? false
@@ -23,8 +36,12 @@ import { HealthModule } from './modules/health/health.module';
               ca: process.env.CACERT,
             },
     }),
+    HealthModule,
+    UsersModule,
+    LessonsModule,
     AuthModule,
     CoursesModule,
+    TasksModule,
   ],
 })
 export class AppModule {}

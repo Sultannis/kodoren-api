@@ -1,8 +1,8 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { CreateCourseDto } from './dto/create-course.dto';
 import { UpdateCourseDto } from './dto/update-course.dto';
 import { Repository } from 'typeorm';
-import { Course } from './entities/course.entity';
+import { Course } from '../../common/entities/course.entity';
 import { InjectRepository } from '@nestjs/typeorm';
 
 @Injectable()
@@ -18,19 +18,69 @@ export class CoursesService {
     return this.coursesRepository.save(course);
   }
 
-  findAll(): Promise<Course[]> {
-    return this.coursesRepository.find();
+  findAll(userId: number): Promise<Course[]> {
+    const coursesQuery = this.coursesRepository
+      .createQueryBuilder('course')
+      .loadRelationCountAndMap('course.totalLessons', 'course.lessons')
+      .loadRelationCountAndMap(
+        'course.freeLessons',
+        'course.lessons',
+        'lesson',
+        (qb) => qb.where('lesson.free = :isFree', { isFree: true }),
+      )
+      .orderBy('created_at', 'ASC');
+
+    if (userId) {
+      coursesQuery.loadRelationCountAndMap(
+        'course.completedLessons',
+        'course.lessons',
+        'lesson',
+        (qb) =>
+          qb
+            .leftJoin('lesson.users', 'userLesson')
+            .andWhere('userLesson.userId = :userId', { userId }),
+      );
+    }
+
+    return coursesQuery.getMany();
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} course`;
+  async findOne(courseId: number): Promise<Course> {
+    const course = await this.coursesRepository
+      .createQueryBuilder('course')
+      .leftJoin('course.lessons', 'lesson')
+      .select(['course', 'lesson.id', 'lesson.title'])
+      .where('course.id = :id', { id: courseId })
+      .getOne();
+
+    if (!course) {
+      throw new NotFoundException(`Course not found`);
+    }
+
+    return course;
   }
 
-  update(id: number, updateCourseDto: UpdateCourseDto) {
-    return `This action updates a #${id} course`;
+  async update(courseId: number, updateCourseDto: UpdateCourseDto) {
+    const course = await this.coursesRepository.findOneBy({ id: courseId });
+    if (!course) {
+      throw new NotFoundException(`Course not found`);
+    }
+
+    await this.coursesRepository.update(courseId, updateCourseDto);
+    return this.coursesRepository.findOneBy({ id: courseId });
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} course`;
+  async softDelete(courseId: number) {
+    const course = await this.coursesRepository.findOneBy({ id: courseId });
+    if (!course) {
+      throw new NotFoundException(`Course not found`);
+    }
+
+    await this.coursesRepository.softDelete(courseId);
+
+    return this.coursesRepository.findOne({
+      where: { id: courseId },
+      withDeleted: true,
+    });
   }
 }
