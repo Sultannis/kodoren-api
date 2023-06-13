@@ -90,6 +90,17 @@ export class AuthService {
     };
   }
 
+  async logout(userId: number) {
+    if (!userId) return;
+
+    const userRefreshToken = await this.refreshTokensRepository.findOneBy({
+      userId,
+    });
+    if (userRefreshToken) {
+      await this.refreshTokensRepository.delete(userRefreshToken.id);
+    }
+  }
+
   async hashPassword(password: string): Promise<string> {
     return bcrypt.hash(password, 10);
   }

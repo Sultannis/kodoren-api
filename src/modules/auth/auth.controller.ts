@@ -7,12 +7,14 @@ import {
   UseInterceptors,
   ClassSerializerInterceptor,
   Res,
+  Req,
 } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { LogInDto } from './dto/log-in.dto';
 import { RegisterDto } from './dto/register.dto';
 import { appConfig } from 'src/config/app.config';
-import { Response } from 'express';
+import { Response, Request } from 'express';
+import { JwtDecodeInterceptor } from './interceptors/jwt-decode.interceptor';
 
 @UseInterceptors(ClassSerializerInterceptor)
 @Controller('auth')
@@ -78,8 +80,11 @@ export class AuthController {
     };
   }
 
+  @UseInterceptors(JwtDecodeInterceptor)
   @Post('logout')
-  async logout(@Res({ passthrough: true }) res: Response) {
+  async logout(@Req() req: Request, @Res({ passthrough: true }) res: Response) {
+    await this.authService.logout(req.user?.id)
+
     res.clearCookie('refreshToken');
     res.clearCookie('accessToken');
   }
