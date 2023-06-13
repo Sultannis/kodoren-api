@@ -107,14 +107,14 @@ export class JwtGuard implements CanActivate {
       response.cookie('accessToken', newAccessToken, {
         httpOnly: true,
         secure: true,
-        sameSite: 'lax',
+        sameSite: 'none',
         maxAge: appConfig.tokenCookieMaxAge,
       });
 
       response.cookie('refreshToken', newRefreshToken, {
         httpOnly: true,
         secure: true,
-        sameSite: 'lax',
+        sameSite: 'none',
         maxAge: appConfig.tokenCookieMaxAge,
       });
     } catch (err) {

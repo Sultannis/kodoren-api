@@ -117,11 +117,15 @@ export class JwtDecodeInterceptor implements NestInterceptor {
 
       response.cookie('accessToken', newAccessToken, {
         httpOnly: true,
+        secure: true,
+        sameSite: 'none',
         maxAge: appConfig.tokenCookieMaxAge,
       });
 
       response.cookie('refreshToken', newRefreshToken, {
         httpOnly: true,
+        secure: true,
+        sameSite: 'none',
         maxAge: appConfig.tokenCookieMaxAge,
       });
     } catch (err) {
