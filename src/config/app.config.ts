@@ -13,6 +13,8 @@ export const appConfig = {
 
   caCert: process.env.CACERT,
 
+  clientDomain: process.env.CLIENT_DOMAIN,
+
   tokenCookieMaxAge: 1000 * 60 * 60 * 12 * 365,
 
   refreshTokenExpirationTime: '30d',

@@ -33,15 +33,13 @@ export class AuthController {
     res.cookie('refreshToken', refreshToken, {
       httpOnly: true,
       secure: true,
-      sameSite: 'none',
-
+      sameSite: 'lax',
       maxAge: appConfig.tokenCookieMaxAge,
     });
 
     res.cookie('accessToken', accessToken, {
       httpOnly: true,
       secure: true,
-      sameSite: 'none',
       maxAge: appConfig.tokenCookieMaxAge,
     });
 
@@ -63,14 +61,14 @@ export class AuthController {
     res.cookie('refreshToken', refreshToken, {
       httpOnly: true,
       secure: true,
-      sameSite: 'none',
+      sameSite: 'lax',
       maxAge: appConfig.tokenCookieMaxAge,
     });
 
     res.cookie('accessToken', accessToken, {
       httpOnly: true,
       secure: true,
-      sameSite: 'none',
+      sameSite: 'lax',
       maxAge: appConfig.tokenCookieMaxAge,
     });
 
