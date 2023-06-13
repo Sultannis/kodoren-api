@@ -30,10 +30,12 @@ export class AuthController {
       logInDto.password,
     );
 
+    console.log('login');
+    console.log(refreshToken);
+
     res.cookie('refreshToken', refreshToken, {
       httpOnly: true,
       secure: true,
-      sameSite: 'lax',
       maxAge: appConfig.tokenCookieMaxAge,
     });
 
