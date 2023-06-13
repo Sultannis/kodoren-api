@@ -31,6 +31,9 @@ export class JwtDecodeInterceptor implements NestInterceptor {
     const response = context.switchToHttp().getResponse();
 
     const { accessToken, refreshToken } = request.cookies;
+
+    console.log(accessToken, refreshToken);
+
     if (!accessToken || !refreshToken) {
       return next.handle();
     }
@@ -92,6 +95,7 @@ export class JwtDecodeInterceptor implements NestInterceptor {
       if (userRefreshToken.token !== refreshToken) {
         response.clearCookie('accessToken');
         response.clearCookie('refreshToken');
+
         throw new UnauthorizedException();
       }
 
