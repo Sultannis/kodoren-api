@@ -59,6 +59,8 @@ export class JwtDecodeInterceptor implements NestInterceptor {
 
         request['user'] = user;
       } else {
+        console.log('Acess token is invalid');
+
         response.clearCookie('accessToken');
         response.clearCookie('refreshToken');
 
@@ -80,6 +82,8 @@ export class JwtDecodeInterceptor implements NestInterceptor {
       });
 
       if (!userRefreshToken) {
+        console.log('there is no refresh token in db');
+
         response.clearCookie('accessToken');
         response.clearCookie('refreshToken');
 
@@ -93,6 +97,10 @@ export class JwtDecodeInterceptor implements NestInterceptor {
       });
 
       if (userRefreshToken.token !== refreshToken) {
+        console.log('refresh tokens does not match');
+        console.log(userRefreshToken.token);
+        console.log(refreshToken);
+
         response.clearCookie('accessToken');
         response.clearCookie('refreshToken');
 
@@ -117,6 +125,10 @@ export class JwtDecodeInterceptor implements NestInterceptor {
         maxAge: appConfig.tokenCookieMaxAge,
       });
     } catch (err) {
+      console.log('something went wrong when generation tokens');
+
+      console.log(err);
+
       response.clearCookie('accessToken');
       response.clearCookie('refreshToken');
 
