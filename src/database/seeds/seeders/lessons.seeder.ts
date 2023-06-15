@@ -92,7 +92,7 @@ const LESSONS = [
                 href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&display=swap"
                 rel="stylesheet"
             />
-            <!-- <link rel="stylesheet" href="https://kodoren-lessons-assets.fra1.cdn.digitaloceanspaces.com/course-1-lesson-1.css" /> -->
+            <link rel="stylesheet" href="https://kodoren-lessons-assets.fra1.cdn.digitaloceanspaces.com/course-1-lesson-1.css" />
             <title>Kodoren store</title>
         </head>
         <body>
