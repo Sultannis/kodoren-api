@@ -4,7 +4,7 @@ import { Lesson } from '../../../common/entities/lesson.entity';
 const LESSONS = [
   {
     order: 1,
-    title: 'İlk bug düzeltme',
+    title: 'Fixing first bug',
     description:
       'Selling page is broken and customers are leaving. See what is going on and try to fix it.',
     courseId: 1,
@@ -43,7 +43,7 @@ const LESSONS = [
   },
   {
     order: 2,
-    title: '2 bug düzeltme',
+    title: 'Basics of HTML tags',
     description:
       "That was a good start, but before we move on any further, let's make sure that you know the structure of the HTML document",
     courseId: 1,
@@ -77,9 +77,9 @@ const LESSONS = [
   },
   {
     order: 3,
-    title: '3 bug düzeltme',
+    title: 'Tag attributes',
     description:
-      'Something is went wrong with the selling page. We need to fix is as soon as possible, otherwise Bunny boss will be really mad.',
+      'To make our page more interesting, we need to add some attributes to our tags',
     courseId: 1,
     free: true,
     codeContent: `<!DOCTYPE html>
@@ -101,6 +101,7 @@ const LESSONS = [
                     <img src="https://kodoren-lessons-assets.fra1.cdn.digitaloceanspaces.com/kodoren-tee.jpg" alt="" class="main__image" />
                     <h1 class="main__heading">Kodoren t-shirt</h1>
                     <p class="main__text">Darkblue baggy-fit t-shirt with kodoren logo. Unisex, 100% cotton</p>
+                    <p class="main__text">Product can be returned within 7 days since purchase*</p>
                     <button class="main__button">Buy</button>
                 </div>
             </main>

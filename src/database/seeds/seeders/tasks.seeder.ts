@@ -26,6 +26,22 @@ const TASKS = [
     ],
     codeToExclude: [],
   },
+  {
+    title: 'Attributes of the tag',
+    descriptions: [
+      `Take a look at the <span class="code-highlight">p</span> tag that you previously inserted to <strong>20th</strong> line. You can see that it has a <span class="code-highlight">class</span> attribute with a value of <span class="code-highlight">"main__text"</span>.`,
+      `There are a lot of attributes that can be used. But the structure remains the same, name followed by an equal sign and a value in surrounded by quotes. There are also some attributes that don't require a value, like the <span class="code-highlight">disabled</span> attribute that can be used on some tags. They are called boolean attributes. We will cover them in the next lesson.`,
+      `For now let's add an <span class="code-highlight">id</span> attribute to the <span class="code-highlight">p</span> tag and give it a value of <span class="code-highlight">"red"</span>.`,
+      `Replace <strong>20th</strong> line with the following code: <br /><span class="code-highlight">&lt;p id="red" class="main__text"&gt; Darkblue baggy-fit t-shirt with kodoren logo. Unisex, 100% cotton &lt;/p&gt;</span>`,
+      `This will add an <span class="code-highlight">id</span> attribute to the paragraph and give it a red color. Note that the value of <span class="code-highlight">id</span> attribute unlike <span class="code-highlight">class</span> is unique and can be used only once on a page. Also note that the the color of the text is not changed solely by the <span class="code-highlight">id</span> attribute. The attribute is used to select the element and the code that adds color if writen externally. We will cover this in the upcoming lessons.`,
+    ],
+    checkboxText: 'Id attribute added',
+    lessonId: 3,
+    codeToInclude: [
+      '<p id="red" class="main__text">Product can be returned within 7 days since purchase*</p>',
+    ],
+    codeToExclude: [],
+  },
 ];
 
 export const seedTasks = async () => {
