@@ -38,7 +38,7 @@ const LESSONS = [
       'Shoot, again... I really need to find a better develops.',
       'Hey, you! Yes, you! Think you can do something about this?',
     ],
-    outroDialogLines: ['Hmmm, not bad. Keep it up!'],
+    outroDialogLines: ['Hmmm, not bad. Would you like to work for me?'],
     codeFileExtension: 'html',
   },
   {
