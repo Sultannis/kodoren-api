@@ -4,9 +4,9 @@ import { Lesson } from '../../../common/entities/lesson.entity';
 const LESSONS = [
   {
     order: 1,
-    title: 'İlk bug düzeltme',
+    title: 'Fixing first bug',
     description:
-      'Something is went wrong with the selling page. We need to fix is as soon as possible, otherwise Bunny boss will be really mad.',
+      'Selling page is broken and customers are leaving. See what is going on and try to fix it.',
     courseId: 1,
     free: true,
     codeContent: `<!DOCTYPE html>
@@ -35,16 +35,17 @@ const LESSONS = [
     </html>
     `,
     introDialogLines: [
-      'Hey, I am Bunny boss. I am the boss of this company. I am really mad because our selling page is broken. Fix it as soon as possible or you will be fired!',
+      'Shoot, again... I really need to find a better develops.',
+      'Hey, you! Yes, you! Think you can do something about this?',
     ],
-    outroDialogLines: ['Good job! Would you like to work for me?'],
+    outroDialogLines: ['Hmmm, not bad. Would you like to work for me?'],
     codeFileExtension: 'html',
   },
   {
     order: 2,
-    title: '2 bug düzeltme',
+    title: 'Basics of HTML tags',
     description:
-      'Something is went wrong with the selling page. We need to fix is as soon as possible, otherwise Bunny boss will be really mad.',
+      "That was a good start, but before we move on any further, let's make sure that you know the structure of the HTML document",
     courseId: 1,
     free: true,
     codeContent: `<!DOCTYPE html>
@@ -57,7 +58,7 @@ const LESSONS = [
                 href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&display=swap"
                 rel="stylesheet"
             />
-            <!-- <link rel="stylesheet" href="https://kodoren-lessons-assets.fra1.cdn.digitaloceanspaces.com/course-1-lesson-1.css" /> -->
+            <link rel="stylesheet" href="https://kodoren-lessons-assets.fra1.cdn.digitaloceanspaces.com/course-1-lesson-1.css" />
             <title>Kodoren store</title>
         </head>
         <body>
@@ -76,9 +77,9 @@ const LESSONS = [
   },
   {
     order: 3,
-    title: '3 bug düzeltme',
+    title: 'Tag attributes',
     description:
-      'Something is went wrong with the selling page. We need to fix is as soon as possible, otherwise Bunny boss will be really mad.',
+      'To make our page more interesting, we need to add some attributes to our tags',
     courseId: 1,
     free: true,
     codeContent: `<!DOCTYPE html>
@@ -91,7 +92,7 @@ const LESSONS = [
                 href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&display=swap"
                 rel="stylesheet"
             />
-            <!-- <link rel="stylesheet" href="https://kodoren-lessons-assets.fra1.cdn.digitaloceanspaces.com/course-1-lesson-1.css" /> -->
+            <link rel="stylesheet" href="https://kodoren-lessons-assets.fra1.cdn.digitaloceanspaces.com/course-1-lesson-1.css" />
             <title>Kodoren store</title>
         </head>
         <body>
@@ -100,6 +101,7 @@ const LESSONS = [
                     <img src="https://kodoren-lessons-assets.fra1.cdn.digitaloceanspaces.com/kodoren-tee.jpg" alt="" class="main__image" />
                     <h1 class="main__heading">Kodoren t-shirt</h1>
                     <p class="main__text">Darkblue baggy-fit t-shirt with kodoren logo. Unisex, 100% cotton</p>
+                    <p class="main__text">Product can be returned within 7 days since purchase*</p>
                     <button class="main__button">Buy</button>
                 </div>
             </main>
