@@ -15,8 +15,8 @@ const TASKS = [
   {
     title: 'The inner structure of the page',
     descriptions: [
-      `HTML file can be processed by your browser, and every page you see on the internet is one, even this sandbox that you are working in right now.`,
-      `As you can see every HTML file is structured using nested 'tags'. <span class="code-highlight">&lt;html lang="tr"&mt;</span>`,
+      `HTML files can be processed by your browser and turned into visual information, every page you see on the internet is an html file, even this sandbox that you are working in right now.`,
+      `As you can see every HTML file is structured using nested 'tags'. The basic structure of the tag consists of opening tag <span class="code-highlight>&lt;sometagname&mt;</span>, text or other nested tags in between and closing tag <span class=”code-highlight>&lt;//sometagname&mt;</span>.`,
     ],
     checkboxText: 'New tag inserted',
     lessonId: 2,

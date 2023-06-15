@@ -9,7 +9,7 @@ const main = async () => {
   try {
     await AppDataSource.initialize();
   } catch (error) {
-    console.log('Fatal error: Failed to initialize Data Source');
+    console.log('Fatal error: Failed to initialize database connection');
   }
 
   try {

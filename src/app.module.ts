@@ -1,7 +1,7 @@
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { UsersModule } from './modules/users/users.module';
-import { datasource } from './database/data-source';
+import { datasourceOptions } from './database/data-source';
 
 import { User } from './common/entities/user.entity';
 import { AuthModule } from './modules/auth/auth.module';
@@ -19,7 +19,7 @@ import { RefreshToken } from './common/entities/refresh-token.entity';
 @Module({
   imports: [
     TypeOrmModule.forRoot({
-      ...datasource,
+      ...datasourceOptions,
       entities: [
         User,
         Course,
