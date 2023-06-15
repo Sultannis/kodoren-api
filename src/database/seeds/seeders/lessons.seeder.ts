@@ -6,7 +6,7 @@ const LESSONS = [
     order: 1,
     title: 'İlk bug düzeltme',
     description:
-      'Something is went wrong with the selling page. We need to fix is as soon as possible, otherwise Bunny boss will be really mad.',
+      'Selling page is broken and customers are leaving. See what is going on and try to fix it.',
     courseId: 1,
     free: true,
     codeContent: `<!DOCTYPE html>
@@ -35,16 +35,17 @@ const LESSONS = [
     </html>
     `,
     introDialogLines: [
-      'Hey, I am Bunny boss. I am the boss of this company. I am really mad because our selling page is broken. Fix it as soon as possible or you will be fired!',
+      'Shoot, again... I really need to find a better develops.',
+      'Hey, you! Yes, you! Think you can do something about this?',
     ],
-    outroDialogLines: ['Good job! Would you like to work for me?'],
+    outroDialogLines: ['Hmmm, not bad. Keep it up!'],
     codeFileExtension: 'html',
   },
   {
     order: 2,
     title: '2 bug düzeltme',
     description:
-      'Something is went wrong with the selling page. We need to fix is as soon as possible, otherwise Bunny boss will be really mad.',
+      "That was a good start, but before we move on any further, let's make sure that you know the structure of the HTML document",
     courseId: 1,
     free: true,
     codeContent: `<!DOCTYPE html>
@@ -57,7 +58,7 @@ const LESSONS = [
                 href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&display=swap"
                 rel="stylesheet"
             />
-            <!-- <link rel="stylesheet" href="https://kodoren-lessons-assets.fra1.cdn.digitaloceanspaces.com/course-1-lesson-1.css" /> -->
+            <link rel="stylesheet" href="https://kodoren-lessons-assets.fra1.cdn.digitaloceanspaces.com/course-1-lesson-1.css" />
             <title>Kodoren store</title>
         </head>
         <body>

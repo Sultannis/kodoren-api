@@ -29,10 +29,10 @@ export class Task {
   title: string;
 
   @Column({
-    name: 'description',
-    type: 'text',
+    name: 'descriptions',
+    type: 'jsonb',
   })
-  description: string;
+  descriptions: string[];
 
   @Column({
     name: 'checkbox_text',

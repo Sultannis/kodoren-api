@@ -26,8 +26,8 @@ export class CreateTasksTable1685396138713 implements MigrationInterface {
             type: 'varchar',
           },
           {
-            name: 'description',
-            type: 'text',
+            name: 'descriptions',
+            type: 'jsonb',
           },
           {
             name: 'lesson_id',
