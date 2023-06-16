@@ -42,6 +42,16 @@ const TASKS = [
     ],
     codeToExclude: [],
   },
+  {
+    title: 'Adding first boolean attribute',
+    descriptions: [
+      `Some of the attributes does not require any value to be passed. Their effect is simply defined by their presence in the tag.`,
+    ],
+    checkboxText: 'Disabled attribute added',
+    lessonId: 4,
+    codeToInclude: ['disabled'],
+    codeToExclude: [],
+  },
 ];
 
 export const seedTasks = async () => {
