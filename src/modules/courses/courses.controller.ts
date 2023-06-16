@@ -8,6 +8,7 @@ import {
   Delete,
   UseInterceptors,
   Req,
+  UseGuards,
 } from '@nestjs/common';
 import { CoursesService } from './courses.service';
 import { CreateCourseDto } from './dto/create-course.dto';
@@ -19,6 +20,7 @@ import { Request } from 'express';
 export class CoursesController {
   constructor(private readonly coursesService: CoursesService) {}
 
+  @UseGuards()
   @Post()
   async create(@Body() createCourseDto: CreateCourseDto) {
     return {

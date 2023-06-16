@@ -11,6 +11,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { RefreshToken } from 'src/common/entities/refresh-token.entity';
 import { Repository } from 'typeorm';
 import { appConfig } from 'src/config/app.config';
+import { AdminsService } from '../admins/admins.service';
 
 @Injectable()
 export class AuthService {
@@ -18,6 +19,7 @@ export class AuthService {
     @InjectRepository(RefreshToken)
     private refreshTokensRepository: Repository<RefreshToken>,
     private usersService: UsersService,
+    private adminsService: AdminsService,
     private jwtService: JwtService,
   ) {}
 
@@ -33,7 +35,9 @@ export class AuthService {
       throw new UnauthorizedException('Wrong password');
     }
 
-    const accessToken = await this.jwtService.signAsync({ id: user.id });
+    const accessToken = await this.jwtService.signAsync({
+      id: user.id,
+    });
 
     const refreshToken = await this.jwtService.signAsync(
       {
@@ -59,6 +63,28 @@ export class AuthService {
     };
   }
 
+  async adminLogin(email: string, password: string) {
+    const admin = await this.adminsService.findOneByEmail(email);
+    if (!admin) {
+      throw new NotFoundException('Admin not found');
+    }
+
+    const isPasswordValid = await this.comparePassword(
+      password,
+      admin.password,
+    );
+    if (!isPasswordValid) {
+      throw new UnauthorizedException('Wrong password');
+    }
+
+    const accessToken = await this.jwtService.signAsync({
+      id: admin.id,
+      isAdmin: true,
+    });
+
+    const refreshToken
+  }
+
   async register(email: string, password: string) {
     let user = await this.usersService.findByEmail(email, true);
     if (user) {
@@ -67,7 +93,7 @@ export class AuthService {
 
     const passwordHash = await this.hashPassword(password);
 
-    user = await this.usersService.register({ email, password: passwordHash });
+    user = await this.usersService.create({ email, password: passwordHash });
 
     const accessToken = await this.jwtService.signAsync({ id: user.id });
 

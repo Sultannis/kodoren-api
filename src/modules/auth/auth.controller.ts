@@ -51,6 +51,15 @@ export class AuthController {
     };
   }
 
+  @HttpCode(HttpStatus.OK)
+  @Post('admin/login')
+  async adminLogin(
+    @Res({ passthrough: true }) res: Response,
+    @Body() logInDto: LogInDto,
+  ) {
+    const { accessToken, refreshToken, user } = await this.authService.adminLogin(
+  }
+
   @Post('register')
   async register(
     @Res({ passthrough: true }) res: Response,

@@ -22,6 +22,7 @@ export class CreateRefreshTokensTable1685388113430
           {
             name: 'user_id',
             type: 'bigint',
+            isUnique: true,
           },
           {
             name: 'token',
