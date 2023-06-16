@@ -2,13 +2,13 @@ import {
   Column,
   Entity,
   JoinColumn,
-  ManyToOne,
+  OneToOne,
   PrimaryGeneratedColumn,
 } from 'typeorm';
 import { User } from './user.entity';
 
-@Entity('refresh_tokens')
-export class RefreshToken {
+@Entity('user_refresh_tokens')
+export class UserRefreshToken {
   @PrimaryGeneratedColumn()
   id: number;
 
@@ -19,7 +19,7 @@ export class RefreshToken {
   userId: number;
 
   @JoinColumn({ name: 'user_id' })
-  @ManyToOne(() => User, (user) => user.refreshTokens)
+  @OneToOne(() => User, (user) => user.refreshToken)
   user: User;
 
   @Column({

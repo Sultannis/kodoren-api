@@ -1,23 +1,21 @@
-import {
-  ConflictException,
-  Injectable,
-  NotFoundException,
-  UnauthorizedException,
-} from '@nestjs/common';
+import { ConflictException, Injectable, NotFoundException, UnauthorizedException } from '@nestjs/common';
 import { UsersService } from '../users/users.service';
 import * as bcrypt from 'bcrypt';
 import { JwtService } from '@nestjs/jwt';
 import { InjectRepository } from '@nestjs/typeorm';
-import { RefreshToken } from 'src/common/entities/refresh-token.entity';
 import { Repository } from 'typeorm';
 import { appConfig } from 'src/config/app.config';
 import { AdminsService } from '../admins/admins.service';
+import { AdminRefreshToken } from 'src/common/entities/admin-refresh-token.entity';
+import { UserRefreshToken } from 'src/common/entities/user-refresh-token.entity';
 
 @Injectable()
 export class AuthService {
   constructor(
-    @InjectRepository(RefreshToken)
-    private refreshTokensRepository: Repository<RefreshToken>,
+    @InjectRepository(AdminRefreshToken)
+    private adminRefreshTokensRepository: Repository<AdminRefreshToken>,
+    @InjectRepository(UserRefreshToken)
+    private userRefreshTokensRepository: Repository<UserRefreshToken>,
     private usersService: UsersService,
     private adminsService: AdminsService,
     private jwtService: JwtService,
@@ -49,12 +47,12 @@ export class AuthService {
       },
     );
 
-    const refreshTokenRecord = this.refreshTokensRepository.create({
+    const refreshTokenRecord = this.userRefreshTokensRepository.create({
       userId: user.id,
       token: refreshToken,
     });
 
-    await this.refreshTokensRepository.save(refreshTokenRecord);
+    await this.userRefreshTokensRepository.save(refreshTokenRecord);
 
     return {
       accessToken,
@@ -69,10 +67,7 @@ export class AuthService {
       throw new NotFoundException('Admin not found');
     }
 
-    const isPasswordValid = await this.comparePassword(
-      password,
-      admin.password,
-    );
+    const isPasswordValid = await this.comparePassword(password, admin.password);
     if (!isPasswordValid) {
       throw new UnauthorizedException('Wrong password');
     }
@@ -82,7 +77,29 @@ export class AuthService {
       isAdmin: true,
     });
 
-    const refreshToken
+    const refreshToken = await this.jwtService.signAsync(
+      {
+        id: admin.id,
+        isAdmin: true,
+        isRefreshToken: true,
+      },
+      {
+        expiresIn: appConfig.refreshTokenExpirationTime,
+      },
+    );
+
+    const refreshTokenRecord = this.adminRefreshTokensRepository.create({
+      adminId: admin.id,
+      token: refreshToken,
+    });
+
+    await this.adminRefreshTokensRepository.save(refreshTokenRecord);
+
+    return {
+      accessToken,
+      refreshToken,
+      admin,
+    };
   }
 
   async register(email: string, password: string) {
@@ -102,12 +119,12 @@ export class AuthService {
       isRefreshToken: true,
     });
 
-    const savedRefreshRecord = this.refreshTokensRepository.create({
+    const savedRefreshRecord = this.userRefreshTokensRepository.create({
       userId: user.id,
       token: refreshToken,
     });
 
-    await this.refreshTokensRepository.save(savedRefreshRecord);
+    await this.userRefreshTokensRepository.save(savedRefreshRecord);
 
     return {
       accessToken,
@@ -116,14 +133,25 @@ export class AuthService {
     };
   }
 
-  async logout(userId: number) {
+  async userLogout(userId: number) {
     if (!userId) return;
 
-    const userRefreshToken = await this.refreshTokensRepository.findOneBy({
+    const userRefreshToken = await this.userRefreshTokensRepository.findOneBy({
       userId,
     });
     if (userRefreshToken) {
-      await this.refreshTokensRepository.delete(userRefreshToken.id);
+      await this.userRefreshTokensRepository.delete(userRefreshToken.id);
+    }
+  }
+
+  async adminLogout(adminId: number) {
+    if (!adminId) return;
+
+    const adminRefreshToken = await this.adminRefreshTokensRepository.findOneBy({
+      adminId,
+    });
+    if (adminRefreshToken) {
+      await this.adminRefreshTokensRepository.delete(adminRefreshToken.id);
     }
   }
 

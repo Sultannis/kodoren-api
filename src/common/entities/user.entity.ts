@@ -6,10 +6,11 @@ import {
   UpdateDateColumn,
   DeleteDateColumn,
   OneToMany,
+  OneToOne,
 } from 'typeorm';
 import { UserCourse } from './user-course.entity';
 import { UserLesson } from './user-lesson.entity';
-import { RefreshToken } from './refresh-token.entity';
+import { UserRefreshToken } from './user-refresh-token.entity';
 
 @Entity('users')
 export class User {
@@ -48,8 +49,8 @@ export class User {
   @OneToMany(() => UserLesson, (userLesson) => userLesson.user)
   lessons: UserLesson[];
 
-  @OneToMany(() => RefreshToken, (refreshToken) => refreshToken.user)
-  refreshTokens: RefreshToken[];
+  @OneToOne(() => UserRefreshToken, (refreshToken) => refreshToken.user)
+  refreshToken: UserRefreshToken[];
 
   @Column({
     name: 'created_at',

@@ -10,8 +10,6 @@ export class AdminsService {
     private adminsRepository: Repository<Admin>,
   ) {}
 
-  async login()
-
   findOneByEmail(email: string): Promise<Admin> {
     return this.adminsRepository.findOneBy({ email });
   }

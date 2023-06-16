@@ -11,18 +11,12 @@ export class CreateRefreshTokensTable1685388113430
   public async up(queryRunner: QueryRunner): Promise<void> {
     await queryRunner.createTable(
       new Table({
-        name: 'refresh_tokens',
+        name: 'user_refresh_tokens',
         columns: [
-          {
-            name: 'id',
-            type: 'bigint',
-            isPrimary: true,
-            isGenerated: true,
-          },
           {
             name: 'user_id',
             type: 'bigint',
-            isUnique: true,
+            isPrimary: true,
           },
           {
             name: 'token',
@@ -33,7 +27,7 @@ export class CreateRefreshTokensTable1685388113430
     );
 
     await queryRunner.createForeignKey(
-      'refresh_tokens',
+      'user_refresh_tokens',
       new TableForeignKey({
         columnNames: ['user_id'],
         referencedTableName: 'users',
@@ -44,6 +38,6 @@ export class CreateRefreshTokensTable1685388113430
   }
 
   public async down(queryRunner: QueryRunner): Promise<void> {
-    await queryRunner.dropTable('refresh_tokens');
+    await queryRunner.dropTable('user_refresh_tokens');
   }
 }

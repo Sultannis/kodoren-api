@@ -2,9 +2,12 @@ import {
   Column,
   CreateDateColumn,
   Entity,
+  OneToOne,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
+import { AdminRefreshToken } from './admin-refresh-token.entity';
+import { Exclude } from 'class-transformer';
 
 @Entity('admins')
 export class Admin {
@@ -18,11 +21,15 @@ export class Admin {
   })
   email: string;
 
+  @Exclude()
   @Column({
     name: 'password',
     type: 'varchar',
   })
   password: string;
+
+  @OneToOne(() => AdminRefreshToken, (token) => token.admin)
+  refreshToken: AdminRefreshToken;
 
   @CreateDateColumn({
     name: 'created_at',

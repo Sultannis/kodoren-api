@@ -1,15 +1,9 @@
-import {
-  CallHandler,
-  ExecutionContext,
-  Injectable,
-  NestInterceptor,
-  UnauthorizedException,
-} from '@nestjs/common';
-import { Request, Response } from 'express';
+import { CallHandler, ExecutionContext, Injectable, NestInterceptor, UnauthorizedException } from '@nestjs/common';
+import { Response } from 'express';
 import { JwtService } from '@nestjs/jwt';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Observable } from 'rxjs';
-import { RefreshToken } from 'src/common/entities/refresh-token.entity';
+import { UserRefreshToken } from 'src/common/entities/user-refresh-token.entity';
 import { appConfig } from 'src/config/app.config';
 import { Repository } from 'typeorm/repository/Repository';
 import { generateAndSaveRefreshToken } from '../helpers/generate-and-save-refresh-token';
@@ -18,15 +12,12 @@ import { generateAccessToken } from '../helpers/generate-access-token';
 @Injectable()
 export class JwtDecodeInterceptor implements NestInterceptor {
   constructor(
-    @InjectRepository(RefreshToken)
-    private refreshTokenRepository: Repository<RefreshToken>,
+    @InjectRepository(UserRefreshToken)
+    private refreshTokenRepository: Repository<UserRefreshToken>,
     private jwtService: JwtService,
   ) {}
 
-  async intercept(
-    context: ExecutionContext,
-    next: CallHandler,
-  ): Promise<Observable<any>> {
+  async intercept(context: ExecutionContext, next: CallHandler): Promise<Observable<any>> {
     const request = context.switchToHttp().getRequest();
     const response = context.switchToHttp().getResponse();
 
@@ -49,11 +40,7 @@ export class JwtDecodeInterceptor implements NestInterceptor {
           ignoreExpiration: true,
         });
 
-        await this.checkRefreshTokenAndReturnNewAccessToken(
-          refreshToken,
-          user.id,
-          response,
-        );
+        await this.checkRefreshTokenAndReturnNewAccessToken(refreshToken, user.id, response);
 
         request['user'] = user;
       } else {
@@ -67,11 +54,7 @@ export class JwtDecodeInterceptor implements NestInterceptor {
     return next.handle();
   }
 
-  private async checkRefreshTokenAndReturnNewAccessToken(
-    refreshToken: string,
-    userId: number,
-    response: Response,
-  ) {
+  private async checkRefreshTokenAndReturnNewAccessToken(refreshToken: string, userId: number, response: Response) {
     try {
       const userRefreshToken = await this.refreshTokenRepository.findOneBy({
         userId,
@@ -97,11 +80,7 @@ export class JwtDecodeInterceptor implements NestInterceptor {
         throw new UnauthorizedException();
       }
 
-      const newRefreshToken = await generateAndSaveRefreshToken(
-        userId,
-        this.jwtService,
-        this.refreshTokenRepository,
-      );
+      const newRefreshToken = await generateAndSaveRefreshToken(userId, this.jwtService, this.refreshTokenRepository);
 
       const newAccessToken = await generateAccessToken(userId, this.jwtService);
 
