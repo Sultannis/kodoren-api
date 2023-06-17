@@ -2,19 +2,19 @@ import { CanActivate, ExecutionContext, ForbiddenException, Injectable, Unauthor
 import { JwtService } from '@nestjs/jwt';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Response } from 'express';
-import { UserRefreshToken } from 'src/common/entities/user-refresh-token.entity';
 import { appConfig } from 'src/config/app.config';
 import { Repository } from 'typeorm';
-import { generateAndSaveRefreshToken } from '../helpers/generate-and-save-refresh-token';
+import { generateAndSaveAdminRefreshToken } from '../helpers/generate-and-save-refresh-token';
 import { generateAccessToken } from '../helpers/generate-access-token';
 import { RequestUser } from '../entities/request-user.entity';
 import { TokenExpiredError } from 'jsonwebtoken';
+import { AdminRefreshToken } from 'src/common/entities/admin-refresh-token.entity';
 
 @Injectable()
 export class JwtGuard implements CanActivate {
   constructor(
-    @InjectRepository(UserRefreshToken)
-    private refreshTokenRepository: Repository<UserRefreshToken>,
+    @InjectRepository(AdminRefreshToken)
+    private refreshTokenRepository: Repository<AdminRefreshToken>,
     private jwtService: JwtService,
   ) {}
 
@@ -57,16 +57,16 @@ export class JwtGuard implements CanActivate {
     return true;
   }
 
-  private async checkRefreshTokenAndReturnNewAccessToken(userId: number, refreshToken: string, response: Response) {
+  private async checkRefreshTokenAndReturnNewAccessToken(adminId: number, refreshToken: string, response: Response) {
     try {
       const userRefreshToken = await this.refreshTokenRepository.findOneBy({
-        userId,
+        adminId: adminId,
       });
       if (!userRefreshToken) {
         this.clearCookiesAndThrowUnauthorizedException(response);
       }
 
-      await this.deleteUserRefreshToken(userId);
+      await this.deleteAdminRefreshToken(adminId);
 
       await this.jwtService.verifyAsync(refreshToken, {
         secret: appConfig.jwtSecret,
@@ -76,9 +76,9 @@ export class JwtGuard implements CanActivate {
         this.clearCookiesAndThrowUnauthorizedException(response);
       }
 
-      const newRefreshToken = await generateAndSaveRefreshToken(userId, this.jwtService, this.refreshTokenRepository);
+      const newRefreshToken = await generateAndSaveAdminRefreshToken(adminId, this.jwtService, this.refreshTokenRepository);
 
-      const newAccessToken = await generateAccessToken(userId, this.jwtService);
+      const newAccessToken = await this.jwtService.signAsync({ id: adminId, isAdmin: true }, { expiresIn: appConfig.accessTokenExpirationTime });
 
       response.cookie('accessToken', newAccessToken, {
         httpOnly: true,
@@ -105,7 +105,7 @@ export class JwtGuard implements CanActivate {
     throw new UnauthorizedException();
   }
 
-  private deleteUserRefreshToken(userId: number) {
-    return this.refreshTokenRepository.delete({ userId });
+  private deleteAdminRefreshToken(adminId: number) {
+    return this.refreshTokenRepository.delete({ adminId });
   }
 }

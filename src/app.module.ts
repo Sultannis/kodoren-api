@@ -32,7 +32,6 @@ import { Admin } from './common/entities/admin.entity';
               ca: process.env.CACERT,
             },
     }),
-    TypeOrmModule.forFeature([UserRefreshToken, AdminRefreshToken]),
     JwtModule.register({
       global: true,
       secret: appConfig.jwtSecret,
