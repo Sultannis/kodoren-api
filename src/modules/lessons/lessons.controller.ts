@@ -1,19 +1,9 @@
-import {
-  Body,
-  Controller,
-  Post,
-  Get,
-  Query,
-  Param,
-  UseGuards,
-  Req,
-  UseInterceptors,
-} from '@nestjs/common';
+import { Body, Controller, Post, Get, Query, Param, UseGuards, Req, UseInterceptors } from '@nestjs/common';
 import { Request } from 'express';
 import { LessonsService } from './lessons.service';
 import { CreateLessonsDto } from './dto/create-lessons.dto';
 import { FindAllLessonsDto } from './dto/find-all-lessons.dto';
-import { JwtGuard } from '../auth/guards/jwt-guard';
+import { JwtGuard } from '../auth/guards/jwt.guard';
 import { JwtDecodeInterceptor } from '../auth/interceptors/jwt-decode.interceptor';
 
 @Controller('lessons')
@@ -56,10 +46,7 @@ export class LessonsController {
 
   @UseGuards(JwtGuard)
   @Post(':lessonId/complete')
-  async setAsCompleted(
-    @Param('lessonId') lessonId: number,
-    @Req() req: Request,
-  ) {
+  async setAsCompleted(@Param('lessonId') lessonId: number, @Req() req: Request) {
     return {
       lesson: await this.lessonsService.setAsCompleted(lessonId, req.user.id),
     };
