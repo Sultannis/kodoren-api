@@ -5,8 +5,7 @@ const LESSONS = [
   {
     order: 1,
     title: 'Fixing first bug',
-    description:
-      'Selling page is broken and customers are leaving. See what is going on and try to fix it.',
+    description: 'Selling page is broken and customers are leaving. See what is going on and try to fix it.',
     courseId: 1,
     free: true,
     codeContent: `<!DOCTYPE html>
@@ -78,8 +77,7 @@ const LESSONS = [
   {
     order: 3,
     title: 'Tag attributes',
-    description:
-      'To make our page more interesting, we need to add some attributes to our tags',
+    description: 'To make our page more interesting, we need to add some attributes to our tags',
     courseId: 1,
     free: true,
     codeContent: `<!DOCTYPE html>
@@ -115,7 +113,7 @@ const LESSONS = [
     title: 'Boolean attributes',
     description: 'Boolean attributes - attributes that do not require a value',
     courseId: 1,
-    free: true,
+    free: false,
     codeContent: `<!DOCTYPE html>
     <html lang="en">
         <head>
