@@ -8,6 +8,7 @@ import { appConfig } from 'src/config/app.config';
 import { AdminsService } from '../admins/admins.service';
 import { AdminRefreshToken } from 'src/common/entities/admin-refresh-token.entity';
 import { UserRefreshToken } from 'src/common/entities/user-refresh-token.entity';
+import { RequestUser } from './entities/request-user.entity';
 
 @Injectable()
 export class AuthService {
@@ -28,31 +29,12 @@ export class AuthService {
     }
 
     const isPasswordValid = await this.comparePassword(password, user.password);
-
     if (!isPasswordValid) {
       throw new UnauthorizedException('Wrong password');
     }
 
-    const accessToken = await this.jwtService.signAsync({
-      id: user.id,
-    });
-
-    const refreshToken = await this.jwtService.signAsync(
-      {
-        id: user.id,
-        isRefreshToken: true,
-      },
-      {
-        expiresIn: appConfig.refreshTokenExpirationTime,
-      },
-    );
-
-    const refreshTokenRecord = this.userRefreshTokensRepository.create({
-      userId: user.id,
-      token: refreshToken,
-    });
-
-    await this.userRefreshTokensRepository.save(refreshTokenRecord);
+    const accessToken = await this.generateAccessToken({ id: user.id });
+    const refreshToken = await this.generateAndSaveUserRefreshToken(user.id);
 
     return {
       accessToken,
@@ -72,28 +54,12 @@ export class AuthService {
       throw new UnauthorizedException('Wrong password');
     }
 
-    const accessToken = await this.jwtService.signAsync({
+    const accessToken = await this.generateAccessToken({
       id: admin.id,
       isAdmin: true,
     });
 
-    const refreshToken = await this.jwtService.signAsync(
-      {
-        id: admin.id,
-        isAdmin: true,
-        isRefreshToken: true,
-      },
-      {
-        expiresIn: appConfig.refreshTokenExpirationTime,
-      },
-    );
-
-    const refreshTokenRecord = this.adminRefreshTokensRepository.create({
-      adminId: admin.id,
-      token: refreshToken,
-    });
-
-    await this.adminRefreshTokensRepository.save(refreshTokenRecord);
+    const refreshToken = await this.generateAndSaveAdminRefreshToken(admin.id);
 
     return {
       accessToken,
@@ -112,19 +78,8 @@ export class AuthService {
 
     user = await this.usersService.create({ email, password: passwordHash });
 
-    const accessToken = await this.jwtService.signAsync({ id: user.id });
-
-    const refreshToken = await this.jwtService.signAsync({
-      id: user.id,
-      isRefreshToken: true,
-    });
-
-    const savedRefreshRecord = this.userRefreshTokensRepository.create({
-      userId: user.id,
-      token: refreshToken,
-    });
-
-    await this.userRefreshTokensRepository.save(savedRefreshRecord);
+    const accessToken = await this.generateAccessToken({ id: user.id });
+    const refreshToken = await this.generateAndSaveUserRefreshToken(user.id);
 
     return {
       accessToken,
@@ -136,23 +91,69 @@ export class AuthService {
   async userLogout(userId: number) {
     if (!userId) return;
 
-    const userRefreshToken = await this.userRefreshTokensRepository.findOneBy({
-      userId,
-    });
-    if (userRefreshToken) {
-      await this.userRefreshTokensRepository.delete(userRefreshToken.id);
-    }
+    await this.deleteUserRefreshToken(userId);
   }
 
   async adminLogout(adminId: number) {
     if (!adminId) return;
 
-    const adminRefreshToken = await this.adminRefreshTokensRepository.findOneBy({
-      adminId,
+    await this.deleteAdminRefreshToken(adminId);
+  }
+
+  async findUserRefreshToken(userId: number) {
+    return this.userRefreshTokensRepository.findOneBy({ userId });
+  }
+
+  async findAdminRefreshToken(adminId: number) {
+    return this.adminRefreshTokensRepository.findOneBy({ adminId });
+  }
+
+  async deleteUserRefreshToken(userId: number) {
+    return this.userRefreshTokensRepository.delete(userId);
+  }
+
+  async deleteAdminRefreshToken(adminId: number) {
+    return this.adminRefreshTokensRepository.delete(adminId);
+  }
+
+  async generateAndSaveUserRefreshToken(userId: number) {
+    const refreshToken = await this.jwtService.signAsync(
+      { id: userId, isRefreshToken: true },
+      { expiresIn: appConfig.refreshTokenExpirationTime },
+    );
+
+    const userRefreshTokenRecord = this.userRefreshTokensRepository.create({
+      userId,
+      token: refreshToken,
     });
-    if (adminRefreshToken) {
-      await this.adminRefreshTokensRepository.delete(adminRefreshToken.id);
-    }
+
+    await this.userRefreshTokensRepository.save(userRefreshTokenRecord);
+
+    return refreshToken;
+  }
+
+  async generateAndSaveAdminRefreshToken(adminId: number) {
+    const refreshToken = await this.jwtService.signAsync(
+      { id: adminId, isAdmin: true, isRefreshToken: true },
+      { expiresIn: appConfig.refreshTokenExpirationTime },
+    );
+
+    const adminRefreshTokenRecord = this.adminRefreshTokensRepository.create({
+      adminId,
+      token: refreshToken,
+    });
+
+    await this.adminRefreshTokensRepository.save(adminRefreshTokenRecord);
+
+    return refreshToken;
+  }
+
+  async generateAccessToken(payload: RequestUser) {
+    return this.jwtService.signAsync(payload);
+  }
+
+  verifyToken({ token, ignoreExpiration = false }) {
+    return this.jwtService.verifyAsync(token, { secret: appConfig.jwtSecret, ignoreExpiration });
   }
 
   async hashPassword(password: string): Promise<string> {

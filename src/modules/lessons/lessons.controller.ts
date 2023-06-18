@@ -3,8 +3,8 @@ import { Request } from 'express';
 import { LessonsService } from './lessons.service';
 import { CreateLessonsDto } from './dto/create-lessons.dto';
 import { FindAllLessonsDto } from './dto/find-all-lessons.dto';
-import { JwtGuard } from '../auth/guards/jwt.guard';
-import { JwtDecodeInterceptor } from '../auth/interceptors/jwt-decode.interceptor';
+import { UserGuard } from '../auth/guards/user.guard';
+import { UserDecodeInterceptor } from '../auth/interceptors/user-decode.interceptor';
 
 @Controller('lessons')
 export class LessonsController {
@@ -15,7 +15,7 @@ export class LessonsController {
     return this.lessonsService.create(createLessonsDto);
   }
 
-  @UseInterceptors(JwtDecodeInterceptor)
+  @UseInterceptors(UserDecodeInterceptor)
   @Get()
   async findAll(@Req() req: Request, @Query() query: FindAllLessonsDto) {
     const { page } = query;
@@ -34,7 +34,7 @@ export class LessonsController {
     };
   }
 
-  @UseInterceptors(JwtDecodeInterceptor)
+  @UseInterceptors(UserDecodeInterceptor)
   @Get(':lessonId')
   async findOne(@Req() req: Request, @Param('lessonId') lessonId: number) {
     const userId = req.user?.id;
@@ -44,7 +44,7 @@ export class LessonsController {
     };
   }
 
-  @UseGuards(JwtGuard)
+  @UseGuards(UserGuard)
   @Post(':lessonId/complete')
   async setAsCompleted(@Param('lessonId') lessonId: number, @Req() req: Request) {
     return {

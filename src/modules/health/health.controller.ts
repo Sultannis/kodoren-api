@@ -1,9 +1,9 @@
 import { Controller, Get, UseGuards } from '@nestjs/common';
-import { JwtGuard } from '../auth/guards/jwt.guard';
+import { AdminGuard } from '../auth/guards/admin.guard';
 
 @Controller('health')
 export class HealthController {
-  @UseGuards(JwtGuard)
+  @UseGuards(AdminGuard)
   @Get()
   healthCheck(): string {
     return 'OK';

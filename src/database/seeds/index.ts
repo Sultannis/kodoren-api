@@ -1,5 +1,6 @@
 /* eslint-disable no-console */
 import { AppDataSource } from '../data-source';
+import { seedAdmins } from './seeders/admin.seeder';
 import { seedCourses } from './seeders/courses.seeder';
 import { seedLessons } from './seeders/lessons.seeder';
 import { seedTasks } from './seeders/tasks.seeder';
@@ -17,6 +18,7 @@ const main = async () => {
     await seedCourses();
     await seedLessons();
     await seedTasks();
+    await seedAdmins();
   } catch (error) {
     console.log(error);
     process.exit(1);

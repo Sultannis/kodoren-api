@@ -14,7 +14,7 @@ import { LogInDto } from './dto/log-in.dto';
 import { RegisterDto } from './dto/register.dto';
 import { appConfig } from 'src/config/app.config';
 import { Response, Request } from 'express';
-import { JwtDecodeInterceptor } from './interceptors/jwt-decode.interceptor';
+import { UserDecodeInterceptor } from './interceptors/user-decode.interceptor';
 
 @UseInterceptors(ClassSerializerInterceptor)
 @Controller('auth')
@@ -95,7 +95,7 @@ export class AuthController {
     };
   }
 
-  @UseInterceptors(JwtDecodeInterceptor)
+  @UseInterceptors(UserDecodeInterceptor)
   @Post('logout')
   async userLogout(@Req() req: Request, @Res({ passthrough: true }) res: Response) {
     await this.authService.userLogout(req.user?.id);
@@ -104,7 +104,7 @@ export class AuthController {
     res.clearCookie('accessToken');
   }
 
-  @UseInterceptors(JwtDecodeInterceptor)
+  @UseInterceptors(UserDecodeInterceptor)
   @Post('logout')
   async adminLogout(@Req() req: Request, @Res({ passthrough: true }) res: Response) {
     await this.authService.adminLogout(req.user?.id);

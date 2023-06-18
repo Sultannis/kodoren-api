@@ -1,19 +1,8 @@
-import {
-  Controller,
-  Get,
-  Post,
-  Body,
-  Patch,
-  Param,
-  Delete,
-  UseInterceptors,
-  Req,
-  UseGuards,
-} from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, UseInterceptors, Req, UseGuards } from '@nestjs/common';
 import { CoursesService } from './courses.service';
 import { CreateCourseDto } from './dto/create-course.dto';
 import { UpdateCourseDto } from './dto/update-course.dto';
-import { JwtDecodeInterceptor } from '../auth/interceptors/jwt-decode.interceptor';
+import { UserDecodeInterceptor } from '../auth/interceptors/user-decode.interceptor';
 import { Request } from 'express';
 
 @Controller('courses')
@@ -28,7 +17,7 @@ export class CoursesController {
     };
   }
 
-  @UseInterceptors(JwtDecodeInterceptor)
+  @UseInterceptors(UserDecodeInterceptor)
   @Get()
   async findAll(@Req() req: Request) {
     return {
@@ -44,10 +33,7 @@ export class CoursesController {
   }
 
   @Patch(':courseId')
-  update(
-    @Param('courseId') courseId: number,
-    @Body() updateCourseDto: UpdateCourseDto,
-  ) {
+  update(@Param('courseId') courseId: number, @Body() updateCourseDto: UpdateCourseDto) {
     return this.coursesService.update(courseId, updateCourseDto);
   }
 

@@ -1,12 +1,11 @@
-import { CanActivate, ExecutionContext, ForbiddenException, Injectable, UnauthorizedException } from '@nestjs/common';
+import { CanActivate, ExecutionContext, Injectable, UnauthorizedException } from '@nestjs/common';
 import { Response } from 'express';
 import { appConfig } from 'src/config/app.config';
-import { RequestUser } from '../entities/request-user.entity';
 import { TokenExpiredError } from 'jsonwebtoken';
 import { AuthService } from '../auth.service';
 
 @Injectable()
-export class AdminGuard implements CanActivate {
+export class UserGuard implements CanActivate {
   constructor(private authService: AuthService) {}
 
   async canActivate(context: ExecutionContext): Promise<boolean> {
@@ -19,22 +18,16 @@ export class AdminGuard implements CanActivate {
     }
 
     try {
-      const admin: RequestUser = await this.authService.verifyToken({ token: accessToken });
+      const user = await this.authService.verifyToken({ token: accessToken });
 
-      if (!admin.isAdmin) {
-        throw new ForbiddenException();
-      }
-
-      request.user = admin;
+      request.user = user;
     } catch (err) {
       if (err instanceof TokenExpiredError) {
-        const admin = await this.authService.verifyToken({ token: accessToken, ignoreExpiration: true });
+        const user = await this.authService.verifyToken({ token: accessToken, ignoreExpiration: true });
 
-        await this.checkRefreshTokenAndSetNewTokenPair(admin.id, refreshToken, response);
+        await this.checkRefreshTokenAndSetNewAccessToken(refreshToken, user.id, response);
 
-        request.user = admin;
-      } else if (err instanceof ForbiddenException) {
-        throw err;
+        request['user'] = user;
       } else {
         this.clearCookiesAndThrowUnauthorizedException(response);
       }
@@ -43,23 +36,25 @@ export class AdminGuard implements CanActivate {
     return true;
   }
 
-  private async checkRefreshTokenAndSetNewTokenPair(adminId: number, refreshToken: string, response: Response) {
+  private async checkRefreshTokenAndSetNewAccessToken(refreshToken: string, userId: number, response: Response) {
     try {
-      const adminRefreshToken = await this.authService.findAdminRefreshToken(adminId);
-      if (!adminRefreshToken) {
+      const userRefreshToken = await this.authService.findUserRefreshToken(userId);
+
+      if (!userRefreshToken) {
         this.clearCookiesAndThrowUnauthorizedException(response);
       }
 
-      await this.authService.deleteAdminRefreshToken(adminId);
+      await this.authService.deleteUserRefreshToken(userId);
 
       await this.authService.verifyToken({ token: refreshToken });
 
-      if (adminRefreshToken.token !== refreshToken) {
+      if (userRefreshToken.token !== refreshToken) {
         this.clearCookiesAndThrowUnauthorizedException(response);
       }
 
-      const newRefreshToken = await this.authService.generateAndSaveAdminRefreshToken(adminId);
-      const newAccessToken = await this.authService.generateAccessToken({ id: adminId, isAdmin: true });
+      const newRefreshToken = await this.authService.generateAndSaveUserRefreshToken(userId);
+
+      const newAccessToken = await this.authService.generateAccessToken({ id: userId });
 
       response.cookie('accessToken', newAccessToken, {
         httpOnly: true,
