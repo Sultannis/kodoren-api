@@ -1,14 +1,10 @@
-import {
-  ConflictException,
-  Injectable,
-  NotFoundException,
-} from '@nestjs/common';
-import { Lesson } from '../../common/entities/lesson.entity';
+import { ConflictException, Injectable, NotFoundException } from '@nestjs/common';
 import { Repository } from 'typeorm';
-import { CreateLessonsDto } from './dto/create-lessons.dto';
-import { CoursesService } from '../courses/courses.service';
 import { InjectRepository } from '@nestjs/typeorm';
+import { CreateLessonsDto } from './dto/create-lessons.dto';
 import { FindAllLessonsDto } from './dto/find-all-lessons.dto';
+import { CoursesService } from '../courses/courses.service';
+import { Lesson } from '../../common/entities/lesson.entity';
 import { UserLesson } from 'src/common/entities/user-lesson.entity';
 
 @Injectable()
@@ -29,12 +25,7 @@ export class LessonsService {
     return this.lessonsRepository.save(lesson);
   }
 
-  async findAll({
-    page,
-    perPage,
-    courseId,
-    userId,
-  }: FindAllLessonsDto): Promise<[lessons: Lesson[], total: number]> {
+  async findAll({ page, perPage, courseId, userId }: FindAllLessonsDto): Promise<[lessons: Lesson[], total: number]> {
     const lessonsQuery = this.lessonsRepository
       .createQueryBuilder('lesson')
       .skip((page - 1) * perPage)
@@ -46,11 +37,8 @@ export class LessonsService {
     }
 
     if (userId) {
-      lessonsQuery.loadRelationCountAndMap(
-        'lesson.completed',
-        'lesson.users',
-        'userLesson',
-        (qb) => qb.where('userLesson.userId = :userId', { userId }),
+      lessonsQuery.loadRelationCountAndMap('lesson.completed', 'lesson.users', 'userLesson', (qb) =>
+        qb.where('userLesson.userId = :userId', { userId }),
       );
     }
 

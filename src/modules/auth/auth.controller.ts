@@ -22,9 +22,9 @@ export class AuthController {
   constructor(private readonly authService: AuthService) {}
 
   @HttpCode(HttpStatus.OK)
-  @Post('login')
-  async login(@Res({ passthrough: true }) res: Response, @Body() logInDto: LogInDto) {
-    const { accessToken, refreshToken, user } = await this.authService.login(logInDto.email, logInDto.password);
+  @Post('login/user')
+  async loginUser(@Res({ passthrough: true }) res: Response, @Body() logInDto: LogInDto) {
+    const { accessToken, refreshToken, user } = await this.authService.loginUser(logInDto.email, logInDto.password);
 
     res.cookie('refreshToken', refreshToken, {
       httpOnly: true,
@@ -46,9 +46,9 @@ export class AuthController {
   }
 
   @HttpCode(HttpStatus.OK)
-  @Post('admin/login')
-  async adminLogin(@Res({ passthrough: true }) res: Response, @Body() logInDto: LogInDto) {
-    const { accessToken, refreshToken, admin } = await this.authService.adminLogin(logInDto.email, logInDto.password);
+  @Post('login/admin')
+  async loginAdmin(@Res({ passthrough: true }) res: Response, @Body() logInDto: LogInDto) {
+    const { accessToken, refreshToken, admin } = await this.authService.loginAdmin(logInDto.email, logInDto.password);
 
     res.cookie('refreshToken', refreshToken, {
       httpOnly: true,
@@ -69,9 +69,9 @@ export class AuthController {
     };
   }
 
-  @Post('register')
-  async register(@Res({ passthrough: true }) res: Response, @Body() registerDto: RegisterDto) {
-    const { accessToken, refreshToken, user } = await this.authService.register(
+  @Post('register/user')
+  async registerUser(@Res({ passthrough: true }) res: Response, @Body() registerDto: RegisterDto) {
+    const { accessToken, refreshToken, user } = await this.authService.registerUser(
       registerDto.email,
       registerDto.password,
     );
@@ -96,18 +96,18 @@ export class AuthController {
   }
 
   @UseInterceptors(UserDecodeInterceptor)
-  @Post('logout')
-  async userLogout(@Req() req: Request, @Res({ passthrough: true }) res: Response) {
-    await this.authService.userLogout(req.user?.id);
+  @Post('logout/user')
+  async logoutUser(@Req() req: Request, @Res({ passthrough: true }) res: Response) {
+    await this.authService.logoutUser(req.user?.id);
 
     res.clearCookie('refreshToken');
     res.clearCookie('accessToken');
   }
 
   @UseInterceptors(UserDecodeInterceptor)
-  @Post('logout')
-  async adminLogout(@Req() req: Request, @Res({ passthrough: true }) res: Response) {
-    await this.authService.adminLogout(req.user?.id);
+  @Post('logout/admin')
+  async logoutAdmin(@Req() req: Request, @Res({ passthrough: true }) res: Response) {
+    await this.authService.logoutAdmin(req.user?.id);
 
     res.clearCookie('refreshToken');
     res.clearCookie('accessToken');

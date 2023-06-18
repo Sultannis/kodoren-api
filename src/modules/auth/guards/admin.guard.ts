@@ -1,8 +1,8 @@
 import { CanActivate, ExecutionContext, ForbiddenException, Injectable, UnauthorizedException } from '@nestjs/common';
 import { Response } from 'express';
+import { TokenExpiredError } from 'jsonwebtoken';
 import { appConfig } from 'src/config/app.config';
 import { RequestUser } from '../entities/request-user.entity';
-import { TokenExpiredError } from 'jsonwebtoken';
 import { AuthService } from '../auth.service';
 
 @Injectable()

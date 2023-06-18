@@ -3,8 +3,8 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { UsersModule } from './modules/users/users.module';
 import { datasourceOptions } from './database/data-source';
 
-import { User } from './common/entities/user.entity';
 import { AuthModule } from './modules/auth/auth.module';
+import { User } from './common/entities/user.entity';
 import { CoursesModule } from './modules/courses/courses.module';
 import { Course } from './common/entities/course.entity';
 import { HealthModule } from './modules/health/health.module';

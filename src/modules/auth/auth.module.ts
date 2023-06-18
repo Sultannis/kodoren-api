@@ -11,7 +11,7 @@ import { AdminsModule } from '../admins/admins.module';
 @Module({
   imports: [TypeOrmModule.forFeature([UserRefreshToken, AdminRefreshToken]), UsersModule, AdminsModule],
   providers: [AuthService],
-  controllers: [AuthController],
   exports: [AuthService],
+  controllers: [AuthController],
 })
 export class AuthModule {}

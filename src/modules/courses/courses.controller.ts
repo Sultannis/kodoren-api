@@ -9,7 +9,6 @@ import { Request } from 'express';
 export class CoursesController {
   constructor(private readonly coursesService: CoursesService) {}
 
-  @UseGuards()
   @Post()
   async create(@Body() createCourseDto: CreateCourseDto) {
     return {

@@ -1,14 +1,14 @@
 import { ConflictException, Injectable, NotFoundException, UnauthorizedException } from '@nestjs/common';
-import { UsersService } from '../users/users.service';
 import * as bcrypt from 'bcrypt';
 import { JwtService } from '@nestjs/jwt';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { appConfig } from 'src/config/app.config';
-import { AdminsService } from '../admins/admins.service';
 import { AdminRefreshToken } from 'src/common/entities/admin-refresh-token.entity';
 import { UserRefreshToken } from 'src/common/entities/user-refresh-token.entity';
 import { RequestUser } from './entities/request-user.entity';
+import { AdminsService } from '../admins/admins.service';
+import { UsersService } from '../users/users.service';
 
 @Injectable()
 export class AuthService {
@@ -22,7 +22,7 @@ export class AuthService {
     private jwtService: JwtService,
   ) {}
 
-  async login(email: string, password: string) {
+  async loginUser(email: string, password: string) {
     const user = await this.usersService.findByEmail(email);
     if (!user) {
       throw new NotFoundException('User not found');
@@ -43,7 +43,7 @@ export class AuthService {
     };
   }
 
-  async adminLogin(email: string, password: string) {
+  async loginAdmin(email: string, password: string) {
     const admin = await this.adminsService.findOneByEmail(email);
     if (!admin) {
       throw new NotFoundException('Admin not found');
@@ -68,7 +68,7 @@ export class AuthService {
     };
   }
 
-  async register(email: string, password: string) {
+  async registerUser(email: string, password: string) {
     let user = await this.usersService.findByEmail(email, true);
     if (user) {
       throw new ConflictException('User already exists');
@@ -88,13 +88,13 @@ export class AuthService {
     };
   }
 
-  async userLogout(userId: number) {
+  async logoutUser(userId: number) {
     if (!userId) return;
 
     await this.deleteUserRefreshToken(userId);
   }
 
-  async adminLogout(adminId: number) {
+  async logoutAdmin(adminId: number) {
     if (!adminId) return;
 
     await this.deleteAdminRefreshToken(adminId);
