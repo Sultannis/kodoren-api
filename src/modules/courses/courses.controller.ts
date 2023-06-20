@@ -4,11 +4,13 @@ import { CreateCourseDto } from './dto/create-course.dto';
 import { UpdateCourseDto } from './dto/update-course.dto';
 import { UserDecodeInterceptor } from '../auth/interceptors/user-decode.interceptor';
 import { Request } from 'express';
+import { AdminGuard } from '../auth/guards/admin.guard';
 
 @Controller('courses')
 export class CoursesController {
   constructor(private readonly coursesService: CoursesService) {}
 
+  @UseGuards(AdminGuard)
   @Post()
   async create(@Body() createCourseDto: CreateCourseDto) {
     return {
@@ -24,6 +26,7 @@ export class CoursesController {
     };
   }
 
+  @UseInterceptors(UserDecodeInterceptor)
   @Get(':courseId')
   async findOne(@Param('courseId') courseId: number) {
     return {
@@ -31,11 +34,13 @@ export class CoursesController {
     };
   }
 
+  @UseGuards(AdminGuard)
   @Patch(':courseId')
   update(@Param('courseId') courseId: number, @Body() updateCourseDto: UpdateCourseDto) {
     return this.coursesService.update(courseId, updateCourseDto);
   }
 
+  @UseGuards(AdminGuard)
   @Delete(':courseId')
   delete(@Param('courseId') courseId: number) {
     return this.coursesService.softDelete(courseId);
