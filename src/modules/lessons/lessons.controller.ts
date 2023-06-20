@@ -5,11 +5,13 @@ import { CreateLessonsDto } from './dto/create-lessons.dto';
 import { FindAllLessonsDto } from './dto/find-all-lessons.dto';
 import { UserGuard } from '../auth/guards/user.guard';
 import { UserDecodeInterceptor } from '../auth/interceptors/user-decode.interceptor';
+import { AdminGuard } from '../auth/guards/admin.guard';
 
 @Controller('lessons')
 export class LessonsController {
   constructor(private lessonsService: LessonsService) {}
 
+  @UseGuards(AdminGuard)
   @Post()
   async create(@Body() createLessonsDto: CreateLessonsDto) {
     return this.lessonsService.create(createLessonsDto);
