@@ -18,7 +18,7 @@ export class CoursesService {
     return this.coursesRepository.save(course);
   }
 
-  findAll(userId: number): Promise<Course[]> {
+  findAll(userId?: number): Promise<Course[]> {
     const coursesQuery = this.coursesRepository
       .createQueryBuilder('course')
       .loadRelationCountAndMap('course.totalLessons', 'course.lessons')

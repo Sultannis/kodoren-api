@@ -26,14 +26,14 @@ export class LessonsService {
   }
 
   async findAll({ page, perPage, courseId, userId }: FindAllLessonsDto): Promise<[lessons: Lesson[], total: number]> {
-    const lessonsQuery = this.lessonsRepository
-      .createQueryBuilder('lesson')
-      .skip((page - 1) * perPage)
-      .take(perPage)
-      .orderBy('lesson.order', 'ASC');
+    const lessonsQuery = this.lessonsRepository.createQueryBuilder('lesson').orderBy('lesson.order', 'ASC');
 
     if (courseId) {
       lessonsQuery.where('lesson.courseId = :courseId', { courseId });
+    }
+
+    if (page && perPage) {
+      lessonsQuery.skip((page - 1) * perPage).take(perPage);
     }
 
     if (userId) {
@@ -49,7 +49,7 @@ export class LessonsService {
     return [lessons, count];
   }
 
-  async findOneById(lessonId: number, userId: number): Promise<Lesson> {
+  async findOneById(lessonId: number, userId?: number): Promise<Lesson> {
     const lesson = await this.lessonsRepository
       .createQueryBuilder('lesson')
       .where('lesson.id = :lessonId', { lessonId })
@@ -72,7 +72,7 @@ export class LessonsService {
     return lesson;
   }
 
-  async setAsCompleted(lessonId: number, userId: number) {
+  async setAsCompleted(lessonId: number, userId?: number) {
     const lesson = await this.lessonsRepository.findOneBy({
       id: lessonId,
     });

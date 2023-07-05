@@ -18,10 +18,7 @@ export class UsersService {
     return this.usersRepository.save(user);
   }
 
-  findAll(
-    page: number,
-    perPage: number,
-  ): Promise<[users: User[], total: number]> {
+  findAll(page: number, perPage: number): Promise<[users: User[], total: number]> {
     return this.usersRepository.findAndCount({
       skip: (page - 1) * perPage,
       take: perPage,
@@ -32,14 +29,11 @@ export class UsersService {
     return this.usersRepository.findOneBy({ id: userId });
   }
 
-  findByEmail(
-    email: string,
-    withDeleted: boolean = false,
-  ): Promise<User | null> {
+  findByEmail(email: string, withDeleted: boolean = false): Promise<User | null> {
     return this.usersRepository.findOne({ where: { email }, withDeleted });
   }
 
-  async update(userId: number, payload: UpdateUserDto): Promise<User> {
+  async update(userId: number, payload: UpdateUserDto): Promise<User | null> {
     const user = await this.usersRepository.findOneBy({ id: userId });
     if (!user) {
       throw new NotFoundException('User not found');
@@ -50,7 +44,7 @@ export class UsersService {
     return this.usersRepository.findOneBy({ id: userId });
   }
 
-  async softDelete(userId: number): Promise<User> {
+  async softDelete(userId: number): Promise<User | null> {
     const user = await this.usersRepository.findOneBy({ id: userId });
     if (!user) {
       throw new NotFoundException('User not found');

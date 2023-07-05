@@ -42,6 +42,7 @@ export class UserDecodeInterceptor implements NestInterceptor {
     try {
       const userRefreshToken = await this.authService.findUserRefreshToken(userId);
       if (!userRefreshToken) {
+        userRefreshToken;
         this.clearCookiesAndThrowUnauthorizedException(response);
       }
 
@@ -77,7 +78,7 @@ export class UserDecodeInterceptor implements NestInterceptor {
     }
   }
 
-  private clearCookiesAndThrowUnauthorizedException(response: Response) {
+  private clearCookiesAndThrowUnauthorizedException(response: Response): never {
     response.clearCookie('accessToken');
     response.clearCookie('refreshToken');
 

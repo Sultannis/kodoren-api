@@ -50,7 +50,7 @@ export class LessonsController {
   @Post(':lessonId/complete')
   async setAsCompleted(@Param('lessonId') lessonId: number, @Req() req: Request) {
     return {
-      lesson: await this.lessonsService.setAsCompleted(lessonId, req.user.id),
+      lesson: await this.lessonsService.setAsCompleted(lessonId, req.user?.id),
     };
   }
 }
